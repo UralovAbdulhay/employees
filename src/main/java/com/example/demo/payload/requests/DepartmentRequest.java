@@ -1,10 +1,7 @@
 package com.example.demo.payload.requests;
 
 import com.example.demo.entity.Department;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import javax.validation.constraints.NotBlank;
@@ -13,13 +10,12 @@ import javax.validation.constraints.Null;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class DepartmentRequest {
+public class DepartmentRequest extends BaseRequest {
 
-    Long id;
 
     String name;
-
 
 
 }

@@ -1,10 +1,7 @@
 package com.example.demo.payload.requests;
 
 import com.example.demo.entity.basicEntity.AttendanceType;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import javax.validation.constraints.NotNull;
@@ -14,8 +11,9 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AttendanceRequest {
+public class AttendanceRequest extends BaseRequest {
 
     Long employeeId;
 
@@ -30,3 +28,4 @@ public class AttendanceRequest {
 
 
 }
+
