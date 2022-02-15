@@ -6,10 +6,10 @@ public class MapTest {
 
     public static void main(String[] args) {
 
-        Object abdulhay = new Student1("Abdulhay", 12, true);
-        Object  muqadas = new Student2("Muqadas", 10, false, "null");
+        Object student1 = new Student1("Student1", 12, true);
+        Object  student2 = new Student2("Student2", 10, false, "null");
 
-        test(muqadas, abdulhay);
+        test(student2, student1);
     }
 
     static void test(Object o1, Object o2) {
