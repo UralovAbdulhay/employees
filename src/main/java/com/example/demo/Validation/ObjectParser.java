@@ -1,55 +1,12 @@
-package com.example.demo.tests.reflection;
-
-import com.example.demo.tests.Student1;
+package com.example.demo.Validation;
 
 import java.lang.reflect.Field;
-import java.time.LocalDateTime;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-public class Reflection {
-
-    public static void main(String[] args) {
-
-        long l = System.currentTimeMillis();
-
-        RefType_1 type1 = new RefType_1(null, "UraLOV", 54, "Sergili", 21.2, LocalDateTime.now());
-
-        RefType_2 type2 = new RefType_2("nODIR", null, 32);
-
-        System.out.println("main");
-        System.out.println(type1);
-        System.out.println(type2);
-        System.out.println("main");
-
-
-//        List<Field> fields_1 = List.of(type1.getClass().getDeclaredFields());
-//
-//        List<Field> fields_2 = List.of(type2.getClass().getDeclaredFields());
-//
-//
-//        System.out.println(fields_1.stream().map(Field::getName).collect(Collectors.toList()));
-//        System.out.println(type1);
-//        System.out.println();
-//        System.out.println(type2);
-//        System.out.println(fields_2.stream().map(Field::getName).collect(Collectors.toList()));
-//
-
-        Student1 student1 = new Student1();
-        student1.setName("Muhriddin");
-
-        copyFieldsIgnoreNulls(student1, type1, false);
-
-        System.out.println();
-        System.out.println("main");
-        System.out.println(type1);
-        System.out.println(type2);
-        System.out.println(student1);
-        System.out.println("main");
-
-        System.out.println(System.currentTimeMillis() - l);
-    }
-
+public abstract class ObjectParser {
 
     static void copyFields(Object dest, Object src) {
 
@@ -102,7 +59,6 @@ public class Reflection {
 
 
     }
-
 
     static void copyFieldsIgnoreNulls(Object dest, Object src, boolean isIgnore) {
 
@@ -163,6 +119,5 @@ public class Reflection {
 
 
     }
-
 
 }
