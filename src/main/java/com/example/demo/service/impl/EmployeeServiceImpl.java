@@ -17,12 +17,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 
     @Override
-    public Employee save(Employee employee) {
+    public Employee saveOrUpdate(Employee employee) {
         return null;
     }
 
     @Override
-    public List<Employee> save(Collection<Employee> employees) {
+    public List<Employee> saveOrUpdate(Collection<Employee> employees) {
         return null;
     }
 
@@ -36,15 +36,12 @@ public class EmployeeServiceImpl implements EmployeeService {
         return null;
     }
 
-    @Override
-    public Employee update(Employee employee, Long id) {
-        return null;
-    }
 
     @Override
     public boolean delete(Long id) {
         return false;
     }
+
 
     @Override
     public boolean existById(Long id) {

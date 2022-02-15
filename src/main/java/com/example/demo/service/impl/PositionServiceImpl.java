@@ -1,34 +1,31 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.Attendance;
-import com.example.demo.service.AttendanceService;
+import com.example.demo.entity.Position;
+import com.example.demo.service.PositionService;
 
 import java.util.Collection;
 import java.util.List;
 
-public class AttendanceServiceImpl implements AttendanceService {
-
-
+public class PositionServiceImpl implements PositionService {
     @Override
-    public Attendance saveOrUpdate(Attendance attendance) {
+    public Position saveOrUpdate(Position position) {
         return null;
     }
 
     @Override
-    public List<Attendance> saveOrUpdate(Collection<Attendance> attendances) {
+    public List<Position> saveOrUpdate(Collection<Position> positions) {
         return null;
     }
 
     @Override
-    public Attendance findById(Long id) {
+    public Position findById(Long id) {
         return null;
     }
 
     @Override
-    public List<Attendance> findAll(int page, int size) {
+    public List<Position> findAll(int page, int size) {
         return null;
     }
-
 
     @Override
     public boolean delete(Long id) {

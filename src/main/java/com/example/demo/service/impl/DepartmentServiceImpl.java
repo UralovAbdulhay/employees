@@ -1,34 +1,33 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.Attendance;
-import com.example.demo.service.AttendanceService;
+import com.example.demo.entity.Department;
+import com.example.demo.service.DepartmentService;
 
 import java.util.Collection;
 import java.util.List;
 
-public class AttendanceServiceImpl implements AttendanceService {
+public class DepartmentServiceImpl implements DepartmentService {
 
 
     @Override
-    public Attendance saveOrUpdate(Attendance attendance) {
+    public Department saveOrUpdate(Department department) {
         return null;
     }
 
     @Override
-    public List<Attendance> saveOrUpdate(Collection<Attendance> attendances) {
+    public List<Department> saveOrUpdate(Collection<Department> departments) {
         return null;
     }
 
     @Override
-    public Attendance findById(Long id) {
+    public Department findById(Long id) {
         return null;
     }
 
     @Override
-    public List<Attendance> findAll(int page, int size) {
+    public List<Department> findAll(int page, int size) {
         return null;
     }
-
 
     @Override
     public boolean delete(Long id) {

@@ -16,18 +16,10 @@ import javax.validation.constraints.Null;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class DepartmentRequest {
 
-    @Null
     Long id;
 
-    @NotBlank
     String name;
 
-
-    public static Department resolve() {
-
-
-        return null;
-    }
 
 
 }
