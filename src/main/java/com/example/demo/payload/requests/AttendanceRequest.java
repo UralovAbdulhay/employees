@@ -2,7 +2,8 @@ package com.example.demo.payload.requests;
 
 import com.example.demo.Validation.validatioinGroup.SaveValidation;
 import com.example.demo.Validation.validatioinGroup.UpdateValidation;
-import com.example.demo.entity.basicEntity.AttendanceType;
+import com.example.demo.base.BaseRequest;
+import com.example.demo.entity.types.AttendanceType;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -18,15 +19,15 @@ import java.time.LocalDateTime;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AttendanceRequest extends BaseRequest {
 
-    @NotNull(groups = UpdateValidation.class, message = "Id null bo'lishi mumkin emas")
-    @Min(value = 1, groups = UpdateValidation.class, message = "Id 1 dan kichik bo'lishi mumkin emas")
+    @NotNull(groups = {UpdateValidation.class, SaveValidation.class}, message = "Id null bo'lishi mumkin emas")
+    @Min(value = 1, groups = {UpdateValidation.class, SaveValidation.class}, message = "Id 1 dan kichik bo'lishi mumkin emas")
     Long employeeId;
 
     @NotNull(groups = SaveValidation.class)
     AttendanceType type;
 
     @NotNull(groups = SaveValidation.class)
-    @PastOrPresent(groups = SaveValidation.class)
+    @PastOrPresent(groups = {SaveValidation.class, UpdateValidation.class})
     LocalDateTime eventTime;
 
 }

@@ -1,7 +1,7 @@
 package com.example.demo.entity;
 
-import com.example.demo.entity.basicEntity.AttendanceType;
-import com.example.demo.entity.basicEntity.BaseEntity;
+import com.example.demo.entity.types.AttendanceType;
+import com.example.demo.base.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import lombok.experimental.FieldDefaults;

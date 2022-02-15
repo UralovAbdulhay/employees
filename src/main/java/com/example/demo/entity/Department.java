@@ -1,6 +1,6 @@
 package com.example.demo.entity;
 
-import com.example.demo.entity.basicEntity.BaseEntity;
+import com.example.demo.base.BaseEntity;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

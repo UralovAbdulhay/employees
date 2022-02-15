@@ -8,59 +8,8 @@ import java.util.stream.Collectors;
 
 public abstract class ObjectParser {
 
-    static void copyFields(Object dest, Object src) {
 
-
-        Map<String, Field> destFieldMap = List.of(dest.getClass().getDeclaredFields())
-                .stream()
-                .collect(Collectors.toMap(Field::getName, e -> e));
-
-
-        Map<String, Field> srcFieldMap = List.of(src.getClass().getDeclaredFields())
-                .stream()
-                .collect(Collectors.toMap(Field::getName, e -> e));
-
-        System.out.println("***********************");
-        System.out.println(destFieldMap.keySet());
-        System.out.println(srcFieldMap.keySet());
-        System.out.println("***********************");
-
-
-        final Set<String> destFields = destFieldMap.keySet();
-        srcFieldMap.keySet().forEach(
-                e -> {
-
-                    if (destFields.contains(e)) {
-                        Field field = destFieldMap.get(e);
-                        field.setAccessible(true);
-                        srcFieldMap.get(e).setAccessible(true);
-                        try {
-                            field.set(
-                                    dest,
-                                    srcFieldMap.get(e).get(src)
-                            );
-                        } catch (IllegalAccessException ex) {
-                            try {
-                                field.set(
-                                        dest,
-                                        null
-                                );
-                            } catch (IllegalAccessException exc) {
-                                exc.printStackTrace();
-                            }
-
-                            ex.printStackTrace();
-                        }
-
-                        destFieldMap.put(e, field);
-                    }
-                }
-        );
-
-
-    }
-
-    static void copyFieldsIgnoreNulls(Object dest, Object src, boolean isIgnore) {
+    static Object copyFieldsIgnoreNulls(Object dest, Object src, boolean isIgnore) {
 
 
         Map<String, Field> destFieldMap = List.of(dest.getClass().getDeclaredFields())
@@ -117,6 +66,7 @@ public abstract class ObjectParser {
                 }
         );
 
+        return dest;
 
     }
 

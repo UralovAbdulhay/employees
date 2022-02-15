@@ -1,4 +1,4 @@
-package com.example.demo.service;
+package com.example.demo.base;
 
 import java.util.Collection;
 import java.util.List;

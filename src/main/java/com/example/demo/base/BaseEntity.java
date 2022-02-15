@@ -1,7 +1,8 @@
-package com.example.demo.entity.basicEntity;
+package com.example.demo.base;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
+import lombok.Builder.Default;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -31,6 +32,11 @@ public abstract class BaseEntity {
     @LastModifiedDate
     @Column(name = "updated_at", nullable = false)
     protected LocalDateTime updateAt;
+
+    @Default
+    @JsonIgnore
+    @Column(name = "is_active", nullable = false)
+    boolean isActive = true;
 
 
 }

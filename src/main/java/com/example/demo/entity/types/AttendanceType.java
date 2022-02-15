@@ -1,4 +1,4 @@
-package com.example.demo.entity.basicEntity;
+package com.example.demo.entity.types;
 
 public enum AttendanceType {
     COME,
