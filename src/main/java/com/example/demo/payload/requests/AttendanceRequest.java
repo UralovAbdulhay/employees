@@ -4,8 +4,6 @@ import com.example.demo.entity.basicEntity.AttendanceType;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDateTime;
 
 @Data
@@ -17,13 +15,8 @@ public class AttendanceRequest extends BaseRequest {
 
     Long employeeId;
 
-
-    @NotNull
     AttendanceType type;
 
-
-    @NotNull
-    @PastOrPresent
     LocalDateTime eventTime;
 
 
