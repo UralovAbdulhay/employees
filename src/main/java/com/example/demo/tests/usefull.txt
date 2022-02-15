@@ -1,0 +1,5 @@
+// validation group
+https://www.baeldung.com/javax-validation-groups
+
+// reflection
+https://javarush.ru/groups/posts/513-reflection-api-refleksija-temnaja-storona-java
