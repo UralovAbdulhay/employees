@@ -15,6 +15,9 @@ public interface BaseURL {
     String GET_ALL = "/get-all";
     String IMPORT = "/import";
     String EXPORT = "/export";
+    String PATH_VARIABLE = "/{id}";
+    
+
 
 
 

@@ -5,8 +5,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import static com.example.demo.base.BaseURL.*;
 
-@RequestMapping(EMPLOYEE)
-public interface EmployeeEndpoint extends BaseEndpoint {
+@RequestMapping(POSITION)
+public interface PositionEndpoint extends BaseEndpoint {
 
 
 
