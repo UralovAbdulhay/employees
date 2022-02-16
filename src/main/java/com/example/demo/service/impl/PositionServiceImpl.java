@@ -1,19 +1,21 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.Position;
+import com.example.demo.payload.requests.PositionRequest;
 import com.example.demo.service.PositionService;
 
 import java.util.Collection;
 import java.util.List;
 
 public class PositionServiceImpl implements PositionService {
+
     @Override
-    public Position saveOrUpdate(Position position) {
+    public Position saveOrUpdate(PositionRequest t) {
         return null;
     }
 
     @Override
-    public List<Position> saveOrUpdate(Collection<Position> positions) {
+    public List<Position> saveOrUpdate(Collection<PositionRequest> ts) {
         return null;
     }
 

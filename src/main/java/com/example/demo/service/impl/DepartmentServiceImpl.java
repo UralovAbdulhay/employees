@@ -1,6 +1,7 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.Department;
+import com.example.demo.payload.requests.DepartmentRequest;
 import com.example.demo.service.DepartmentService;
 
 import java.util.Collection;
@@ -10,12 +11,12 @@ public class DepartmentServiceImpl implements DepartmentService {
 
 
     @Override
-    public Department saveOrUpdate(Department department) {
+    public Department saveOrUpdate(DepartmentRequest t) {
         return null;
     }
 
     @Override
-    public List<Department> saveOrUpdate(Collection<Department> departments) {
+    public List<Department> saveOrUpdate(Collection<DepartmentRequest> ts) {
         return null;
     }
 

@@ -1,5 +1,9 @@
 package com.example.demo.Validation;
 
+import com.example.demo.base.BaseEntity;
+import com.example.demo.base.BaseRepository;
+import com.example.demo.base.BaseRequest;
+
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
@@ -9,7 +13,7 @@ import java.util.stream.Collectors;
 public abstract class ObjectParser {
 
 
-    static <D, S> D copyFieldsIgnoreNulls(D dest, S src, boolean isNullIgnore) {
+    public static <D extends BaseEntity, S extends BaseRequest> D copyFieldsIgnoreNulls(D dest, S src, boolean isNullIgnore) {
 
 
         Map<String, Field> destFieldMap = List.of(dest.getClass().getDeclaredFields())
