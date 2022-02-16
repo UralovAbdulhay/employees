@@ -1,6 +1,8 @@
 package com.example.demo.controller;
 
 import com.example.demo.controller.endpoint.AttendanceEndpoint;
+import com.example.demo.payload.Result;
+import com.example.demo.payload.requests.AttendanceRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,22 +11,22 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AttendanceController implements AttendanceEndpoint {
     @Override
-    public ResponseEntity<?> saveOrUpdate(Object request) {
+    public ResponseEntity<Result> saveOrUpdate(AttendanceRequest request) {
         return null;
     }
 
     @Override
-    public ResponseEntity<?> get(Long id) {
+    public ResponseEntity<Result> get(Long id) {
         return null;
     }
 
     @Override
-    public ResponseEntity<?> getAll(int page, int size) {
+    public ResponseEntity<Result> getAll(int page, int size) {
         return null;
     }
 
     @Override
-    public ResponseEntity<?> delete(Long id) {
+    public ResponseEntity<Result> delete(Long id) {
         return null;
     }
 }

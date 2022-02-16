@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 public abstract class ObjectParser {
 
 
-    static Object copyFieldsIgnoreNulls(Object dest, Object src, boolean isIgnore) {
+    static <D, S> D copyFieldsIgnoreNulls(D dest, S src, boolean isNullIgnore) {
 
 
         Map<String, Field> destFieldMap = List.of(dest.getClass().getDeclaredFields())
@@ -34,7 +34,7 @@ public abstract class ObjectParser {
 
                     try {
                         srcFieldMap.get(e).setAccessible(true);
-                        boolean b = !isIgnore || srcFieldMap.get(e).get(src) != null;
+                        boolean b = !isNullIgnore || srcFieldMap.get(e).get(src) != null;
 
                         if (b && destFields.contains(e)) {
                             Field field = destFieldMap.get(e);
