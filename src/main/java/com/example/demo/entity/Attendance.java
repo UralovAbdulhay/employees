@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -17,20 +18,17 @@ import java.time.LocalDateTime;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Attendance extends BaseEntity {
 
-    @OneToOne
     @Enumerated(value = EnumType.STRING)
-    @Column(nullable = false)
+    @JoinColumn(nullable = false)
     AttendanceType type;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm")
     @Column(nullable = false, name = "event_time")
     LocalDateTime eventTime;
 
+    @JoinColumn(nullable = false)
     @OneToOne
-    @Column(nullable = false)
     Employee employee;
 
-    @Column(name = "active", nullable = false)
-    boolean isActive = true;
 
 }

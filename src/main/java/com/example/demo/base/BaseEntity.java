@@ -33,7 +33,7 @@ public abstract class BaseEntity {
     @Column(name = "updated_at", nullable = false)
     protected LocalDateTime updateAt;
 
-    @Default
+
     @JsonIgnore
     @Column(name = "is_active", nullable = false)
     boolean isActive = true;

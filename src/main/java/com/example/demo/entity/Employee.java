@@ -6,6 +6,7 @@ import lombok.experimental.FieldDefaults;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import java.time.LocalDate;
 
@@ -27,7 +28,7 @@ public class Employee extends BaseEntity {
     LocalDate birthDate;
 
     @ManyToOne
-    @Column(nullable = false)
+    @JoinColumn(nullable = false)
     Position position;
 
 }

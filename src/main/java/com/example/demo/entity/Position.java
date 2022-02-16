@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import java.util.List;
@@ -19,7 +20,7 @@ public class Position extends BaseEntity {
 
     String name;
 
-    @OneToMany(mappedBy = "position")
+    @OneToMany(mappedBy = "position", fetch = FetchType.LAZY)
     List<Employee> employees;
 
     @ManyToOne
