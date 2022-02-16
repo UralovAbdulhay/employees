@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.controller.endpoint.DepartmentEndpoint;
 import com.example.demo.payload.Result;
 import com.example.demo.payload.requests.DepartmentRequest;
+import com.example.demo.service.impl.DepartmentServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,9 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 public class DepartmentController implements DepartmentEndpoint {
+
+    private final DepartmentServiceImpl departmentService;
+
     @Override
     public ResponseEntity<Result> saveOrUpdate(DepartmentRequest request) {
-        return null;
+        return ResponseEntity.ok(Result.ok(departmentService.saveOrUpdate(request)));
     }
 
     @Override
