@@ -13,6 +13,7 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
+
 public class DepartmentRequest extends BaseRequest {
 
     @NotBlank(groups = {SaveValidation.class, UpdateValidation.class})

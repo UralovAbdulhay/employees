@@ -9,6 +9,7 @@ import com.example.demo.service.PositionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
 import javax.validation.Validator;
@@ -18,6 +19,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class PositionServiceImpl extends BaseServiceImpl<Position, PositionRequest> implements PositionService {
 
     private final PositionRepository positionRepository;

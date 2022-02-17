@@ -5,6 +5,7 @@ import com.example.demo.base.BaseRepository;
 import com.example.demo.base.BaseRequest;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -16,12 +17,16 @@ public abstract class ObjectParser {
     public static <D extends BaseEntity, S extends BaseRequest> D copyFieldsIgnoreNulls(D dest, S src, boolean isNullIgnore) {
 
 
-        Map<String, Field> destFieldMap = List.of(dest.getClass().getDeclaredFields())
+        List<Field> destFieldList = new ArrayList<>(List.of(dest.getClass().getDeclaredFields()));
+        destFieldList.addAll(List.of(dest.getClass().getSuperclass().getDeclaredFields()));
+        Map<String, Field> destFieldMap = destFieldList
                 .stream()
                 .collect(Collectors.toMap(Field::getName, e -> e));
 
 
-        Map<String, Field> srcFieldMap = List.of(src.getClass().getDeclaredFields())
+        List<Field> srcFieldList = new ArrayList<>(List.of(src.getClass().getDeclaredFields()));
+        srcFieldList.addAll(List.of(src.getClass().getSuperclass().getDeclaredFields()));
+        Map<String, Field> srcFieldMap = srcFieldList
                 .stream()
                 .collect(Collectors.toMap(Field::getName, e -> e));
 
@@ -37,6 +42,7 @@ public abstract class ObjectParser {
                 e -> {
 
                     try {
+
                         srcFieldMap.get(e).setAccessible(true);
                         boolean b = !isNullIgnore || srcFieldMap.get(e).get(src) != null;
 
@@ -49,14 +55,14 @@ public abstract class ObjectParser {
                                         srcFieldMap.get(e).get(src)
                                 );
                             } catch (IllegalAccessException ex) {
-                                try {
-                                    field.set(
-                                            dest,
-                                            null
-                                    );
-                                } catch (IllegalAccessException exc) {
-                                    exc.printStackTrace();
-                                }
+//                                try {
+//                                    field.set(
+//                                            dest,
+//                                            null
+//                                    );
+//                                } catch (IllegalAccessException exc) {
+//                                    exc.printStackTrace();
+//                                }
 
                                 ex.printStackTrace();
                             }

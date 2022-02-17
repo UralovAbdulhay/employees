@@ -42,7 +42,7 @@ public class DepartmentServiceImpl extends BaseServiceImpl<Department, Departmen
     }
 
     @Override
-    public Department findById(@Valid @NotNull @Min(1) Long id) {
+    public Department findById( Long id) {
         return departmentRepository.findById(id).orElseThrow(() -> ResourceNotFound.get("Department", "id", id));
     }
 

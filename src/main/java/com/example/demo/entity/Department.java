@@ -21,7 +21,7 @@ public class Department extends BaseEntity {
     @Column(nullable = false)
     String name;
 
-    @OneToMany(mappedBy = "department", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "department", fetch = FetchType.EAGER)
     List<Position> positions;
 
 }

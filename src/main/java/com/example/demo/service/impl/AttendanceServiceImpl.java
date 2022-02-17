@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
 import javax.validation.Validator;
@@ -20,6 +21,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class AttendanceServiceImpl extends BaseServiceImpl<Attendance, AttendanceRequest> implements AttendanceService {
 
     private final AttendanceRepository attendanceRepository;
