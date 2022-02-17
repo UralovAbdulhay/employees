@@ -14,11 +14,15 @@ public class AttendanceController implements AttendanceEndpoint {
 
     private final AttendanceServiceImpl attendanceService;
 
+
     @Override
-    public ResponseEntity<Result> saveOrUpdate(AttendanceRequest request) {
-        System.out.println(request.toString());
-        System.out.println(request.getId());
-        return mapper(attendanceService.saveOrUpdate(request));
+    public ResponseEntity<Result> save(AttendanceRequest request) {
+        return mapper(attendanceService.save(request));
+    }
+
+    @Override
+    public ResponseEntity<Result> update(AttendanceRequest request) {
+        return mapper(attendanceService.update(request));
     }
 
     @Override

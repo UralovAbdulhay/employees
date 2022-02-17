@@ -13,11 +13,15 @@ import org.springframework.web.bind.annotation.RestController;
 public class EmployeeController implements EmployeeEndpoint {
     private final EmployeeServiceImpl employeeService;
 
+
     @Override
-    public ResponseEntity<Result> saveOrUpdate(EmployeeRequest request) {
-        System.out.println(request.toString());
-        System.out.println(request.getId());
-        return mapper(employeeService.saveOrUpdate(request));
+    public ResponseEntity<Result> save(EmployeeRequest request) {
+        return mapper(employeeService.save(request));
+    }
+
+    @Override
+    public ResponseEntity<Result> update(EmployeeRequest request) {
+        return mapper(employeeService.update(request));
     }
 
     @Override

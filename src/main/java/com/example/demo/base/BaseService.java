@@ -16,9 +16,13 @@ import java.util.Set;
 
 public interface BaseService<E, R> {
 
-    E saveOrUpdate(R t);
+    E save(R t);
 
-    List<E> saveOrUpdate(Collection<R> ts);
+    E update(R t);
+
+    List<E> saveAll(Collection<R> ts);
+
+    List<E> updateAll(Collection<R> ts);
 
     E findById(Long id);
 
@@ -28,22 +32,8 @@ public interface BaseService<E, R> {
 
     boolean existById(Long id);
 
-//    @Autowired
-//    Validator validator;
+    boolean isValidForUpdate(R r);
 
-//    default <D, S> D validate(S request) {
-//
-//        Set validationResult = validator.validate(request, SaveValidation.class);
-//
-//        if (validationResult.size() != 0) {
-//            validationResult = validator.validate(request, UpdateValidation.class);
-//
-//            if (validationResult.size() == 0) {
-//                return null;
-//            }
-//        }
-//
-//        throw BadRequest.get(validationResult.toString());
-//    }
+    boolean isValidForSave(R r);
 
 }

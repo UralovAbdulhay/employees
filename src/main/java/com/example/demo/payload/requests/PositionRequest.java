@@ -1,6 +1,7 @@
 package com.example.demo.payload.requests;
 
 import com.example.demo.Validation.validatioinGroup.SaveValidation;
+import com.example.demo.Validation.validatioinGroup.UpdateValidation;
 import com.example.demo.base.BaseRequest;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -19,7 +20,7 @@ public class PositionRequest extends BaseRequest {
     @NotBlank(groups = SaveValidation.class)
     String name;
 
-    @NotNull(groups = SaveValidation.class, message = "Id null bo'lishi mumkin emas")
+    @NotNull(groups = {UpdateValidation.class, SaveValidation.class}, message = "Id null bo'lishi mumkin emas")
     @Min(value = 1, message = "Id 1 dan kichik bo'lishi mumkin emas")
     Long departmentId;
 

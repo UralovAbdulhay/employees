@@ -17,11 +17,11 @@ import java.util.Set;
 
 
 @RequiredArgsConstructor
-public abstract class BaseServiceImpl<D extends BaseEntity, S extends BaseRequest> implements BaseService<D, S> {
+public abstract class BaseServiceImpl<D extends BaseEntity, S extends BaseRequest> {
 
     private final Validator validator;
-
     private final BaseRepository<D> repository;
+    private final ObjectParser<D, S> objectParser;
 
     protected D validate(D entity, S request) {
         // Save qilish uchun validate qilish
@@ -35,7 +35,7 @@ public abstract class BaseServiceImpl<D extends BaseEntity, S extends BaseReques
         if (saveValidationResult.size() == 0) {
 
             System.out.println("Validate save = " + request);
-            ObjectParser.copyFieldsIgnoreNulls(entity, request, true);
+            objectParser.copyFieldsIgnoreNulls(entity, request, true);
             repository.save(entity);
             System.out.println(entity);
             return entity;
@@ -45,12 +45,11 @@ public abstract class BaseServiceImpl<D extends BaseEntity, S extends BaseReques
 
             final BaseEntity entity1 = entity;
             entity = repository.findById(request.getId()).orElseThrow(() -> ResourceNotFound.get(entity1.getClass().getName(), "id", entity1.getId()));
-            ObjectParser.copyFieldsIgnoreNulls(entity, request, true);
+            objectParser.copyFieldsIgnoreNulls(entity, request, true);
             repository.save(entity);
             System.out.println(entity);
             return entity;
         }
-
 
 
         throw BadRequest.get(updateValidationResult.toString() + "/n" + saveValidationResult.toString());

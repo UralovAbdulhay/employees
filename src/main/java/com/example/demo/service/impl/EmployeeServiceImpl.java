@@ -1,12 +1,15 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.base.BaseServiceImpl;
+import com.example.demo.Validation.ObjectParser;
+import com.example.demo.Validation.validatioinGroup.SaveValidation;
+import com.example.demo.Validation.validatioinGroup.UpdateValidation;
 import com.example.demo.entity.Employee;
+import com.example.demo.exceptions.BadRequest;
 import com.example.demo.exceptions.ResourceNotFound;
 import com.example.demo.payload.requests.EmployeeRequest;
 import com.example.demo.repository.EmployeeRepository;
 import com.example.demo.service.EmployeeService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,25 +23,48 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class EmployeeServiceImpl extends BaseServiceImpl<Employee, EmployeeRequest> implements EmployeeService {
+@RequiredArgsConstructor
+public class EmployeeServiceImpl implements EmployeeService {
 
 
     private final EmployeeRepository employeeRepository;
+    private final PositionServiceImpl positionService;
+    private final Validator validator;
+    private final ObjectParser<Employee, EmployeeRequest> objectParser;
 
-    @Autowired
-    public EmployeeServiceImpl(Validator validator, EmployeeRepository employeeRepository) {
-        super(validator, employeeRepository);
-        this.employeeRepository = employeeRepository;
+
+    @Override
+    public Employee save(EmployeeRequest request) {
+        if (isValidForSave(request)) {
+            Employee employee = new Employee();
+            objectParser.copyFieldsIgnoreNulls(employee, request, true);
+            employee.setPosition(positionService.findById(request.getPositionId()));
+            return employeeRepository.save(employee);
+        } else {
+            throw BadRequest.get("EmployeeRequest not available for saving ");
+        }
     }
 
     @Override
-    public Employee saveOrUpdate(EmployeeRequest request) {
-        return validate(new Employee(), request);
+    public Employee update(EmployeeRequest request) {
+        if (isValidForUpdate(request)) {
+            Employee employee = findById(request.getId());
+            objectParser.copyFieldsIgnoreNulls(employee, request, true);
+            employee.setPosition(positionService.findById(request.getPositionId()));
+            return employeeRepository.save(employee);
+        } else {
+            throw BadRequest.get("EmployeeRequest not available for update ");
+        }
     }
 
     @Override
-    public List<Employee> saveOrUpdate(Collection<EmployeeRequest> requests) {
-        return requests.stream().map(this::saveOrUpdate).collect(Collectors.toList());
+    public List<Employee> saveAll(Collection<EmployeeRequest> requests) {
+        return requests.stream().map(this::save).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Employee> updateAll(Collection<EmployeeRequest> requests) {
+        return requests.stream().map(this::update).collect(Collectors.toList());
     }
 
     @Override
@@ -63,4 +89,14 @@ public class EmployeeServiceImpl extends BaseServiceImpl<Employee, EmployeeReque
         return employeeRepository.existsById(id);
     }
 
+
+    @Override
+    public boolean isValidForUpdate(EmployeeRequest request) {
+        return validator.validate(request, UpdateValidation.class).size() == 0;
+    }
+
+    @Override
+    public boolean isValidForSave(EmployeeRequest request) {
+        return validator.validate(request, SaveValidation.class).size() == 0;
+    }
 }

@@ -9,7 +9,8 @@ public interface BaseURL {
     String FILE = "/file";
 
 
-    String SAVE_OR_UPDATE = "/save-or-edit";
+    String SAVE = "/save";
+    String UPDATE = "/update";
     String DELETE = "/delete";
     String GET = "/get";
     String GET_ALL = "/get-all";

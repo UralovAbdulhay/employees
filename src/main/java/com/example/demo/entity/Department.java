@@ -1,6 +1,7 @@
 package com.example.demo.entity;
 
 import com.example.demo.base.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -21,6 +22,7 @@ public class Department extends BaseEntity {
     @Column(nullable = false)
     String name;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "department", fetch = FetchType.EAGER)
     List<Position> positions;
 

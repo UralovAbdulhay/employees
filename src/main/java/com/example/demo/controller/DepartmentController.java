@@ -1,6 +1,5 @@
 package com.example.demo.controller;
 
-import com.example.demo.base.BaseRequest;
 import com.example.demo.controller.endpoint.DepartmentEndpoint;
 import com.example.demo.payload.Result;
 import com.example.demo.payload.requests.DepartmentRequest;
@@ -19,15 +18,21 @@ public class DepartmentController implements DepartmentEndpoint {
 
     private final DepartmentServiceImpl departmentService;
 
+
     @Override
-    public ResponseEntity<Result> saveOrUpdate(DepartmentRequest request) {
-        System.out.println(request.toString());
-        System.out.println(request.getId());
-        return mapper(departmentService.saveOrUpdate(request));
+    public ResponseEntity<Result> save(DepartmentRequest request) {
+        System.out.println(request);
+
+        return mapper(departmentService.save(request));
     }
 
     @Override
-    public ResponseEntity<Result> get( @Min(1) @Valid @NotNull Long id) {
+    public ResponseEntity<Result> update(DepartmentRequest request) {
+        return mapper(departmentService.update(request));
+    }
+
+    @Override
+    public ResponseEntity<Result> get(@Min(1) @Valid @NotNull Long id) {
         return mapper(departmentService.findById(id));
 
     }

@@ -1,6 +1,7 @@
 package com.example.demo.entity;
 
 import com.example.demo.base.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -17,6 +18,7 @@ public class Position extends BaseEntity {
 
     String name;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "position", fetch = FetchType.EAGER)
     List<Employee> employees;
 

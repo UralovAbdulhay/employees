@@ -1,48 +1,69 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.base.BaseServiceImpl;
+import com.example.demo.Validation.ObjectParser;
+import com.example.demo.Validation.validatioinGroup.SaveValidation;
+import com.example.demo.Validation.validatioinGroup.UpdateValidation;
 import com.example.demo.entity.Department;
+import com.example.demo.exceptions.BadRequest;
 import com.example.demo.exceptions.ResourceNotFound;
 import com.example.demo.payload.requests.DepartmentRequest;
 import com.example.demo.repository.DepartmentRepository;
 import com.example.demo.service.DepartmentService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.validation.Valid;
 import javax.validation.Validator;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class DepartmentServiceImpl extends BaseServiceImpl<Department, DepartmentRequest> implements DepartmentService {
+@RequiredArgsConstructor
+public class DepartmentServiceImpl implements DepartmentService {
 
 
     private final DepartmentRepository departmentRepository;
+    private final ObjectParser<Department, DepartmentRequest> objectParser;
 
-    @Autowired
-    public DepartmentServiceImpl(Validator validator, DepartmentRepository departmentRepository) {
-        super(validator, departmentRepository);
-        this.departmentRepository = departmentRepository;
+    private final Validator validator;
+
+
+    @Override
+    public Department save(DepartmentRequest request) {
+        if (isValidForSave(request)) {
+            Department department = new Department();
+            objectParser.copyFieldsIgnoreNulls(department, request, true);
+            return departmentRepository.save(department);
+        } else {
+            throw BadRequest.get("DepartmentRequest not available for saving ");
+        }
     }
 
     @Override
-    public Department saveOrUpdate(DepartmentRequest request) {
-        return validate(new Department(), request);
+    public Department update(DepartmentRequest request) {
+        if (isValidForUpdate(request)) {
+            Department department = findById(request.getId());
+            objectParser.copyFieldsIgnoreNulls(department, request, true);
+            return departmentRepository.save(department);
+        } else {
+            throw BadRequest.get("DepartmentRequest not available for update ");
+        }
     }
 
     @Override
-    public List<Department> saveOrUpdate(Collection<DepartmentRequest> requests) {
-        return requests.stream().map(this::saveOrUpdate).collect(Collectors.toList());
+    public List<Department> saveAll(Collection<DepartmentRequest> requests) {
+        return requests.stream().map(this::save).collect(Collectors.toList());
     }
 
     @Override
-    public Department findById( Long id) {
+    public List<Department> updateAll(Collection<DepartmentRequest> requests) {
+        return requests.stream().map(this::update).collect(Collectors.toList());
+    }
+
+    @Override
+    public Department findById(Long id) {
         return departmentRepository.findById(id).orElseThrow(() -> ResourceNotFound.get("Department", "id", id));
     }
 
@@ -61,5 +82,15 @@ public class DepartmentServiceImpl extends BaseServiceImpl<Department, Departmen
     @Override
     public boolean existById(Long id) {
         return departmentRepository.existsById(id);
+    }
+
+    @Override
+    public boolean isValidForUpdate(DepartmentRequest request) {
+        return validator.validate(request, UpdateValidation.class).size() == 0;
+    }
+
+    @Override
+    public boolean isValidForSave(DepartmentRequest request) {
+        return validator.validate(request, SaveValidation.class).size() == 0;
     }
 }

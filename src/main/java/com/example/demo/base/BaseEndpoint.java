@@ -8,8 +8,11 @@ import static com.example.demo.base.BaseURL.*;
 
 public interface BaseEndpoint<T> {
 
-    @PostMapping(SAVE_OR_UPDATE)
-    ResponseEntity<Result> saveOrUpdate(@RequestBody T request);
+    @PostMapping(SAVE)
+    ResponseEntity<Result> save(@RequestBody T request);
+
+    @PostMapping(UPDATE)
+    ResponseEntity<Result> update(@RequestBody T request);
 
     @GetMapping(GET + "/{id}")
     ResponseEntity<Result> get(@PathVariable(name = "id") Long id);

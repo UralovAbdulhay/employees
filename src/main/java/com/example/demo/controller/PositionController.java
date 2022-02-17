@@ -15,10 +15,13 @@ public class PositionController implements PositionEndpoint {
     private final PositionServiceImpl positionService;
 
     @Override
-    public ResponseEntity<Result> saveOrUpdate(PositionRequest request) {
-        System.out.println(request.toString());
-        System.out.println(request.getId());
-        return mapper(positionService.saveOrUpdate(request));
+    public ResponseEntity<Result> save(PositionRequest request) {
+        return mapper(positionService.save(request));
+    }
+
+    @Override
+    public ResponseEntity<Result> update(PositionRequest request) {
+        return mapper(positionService.update(request));
     }
 
     @Override
