@@ -1,6 +1,6 @@
 package com.example.demo.tests.reflection;
 
-import com.example.demo.tests.Student1;
+import com.example.demo.tests.others.Student1;
 
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;

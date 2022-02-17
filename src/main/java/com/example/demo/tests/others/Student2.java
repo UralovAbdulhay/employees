@@ -1,4 +1,4 @@
-package com.example.demo.tests;
+package com.example.demo.tests.others;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
