@@ -1,7 +1,6 @@
 package com.example.demo.Validation;
 
 import com.example.demo.base.BaseEntity;
-import com.example.demo.base.BaseRepository;
 import com.example.demo.base.BaseRequest;
 
 import java.lang.reflect.Field;
@@ -32,9 +31,30 @@ public abstract class ObjectParser {
 
 
         System.out.println("***********************");
-        System.out.println(destFieldMap.keySet());
-        System.out.println(srcFieldMap.keySet());
+        System.out.println(destFieldMap);
+        System.out.println(srcFieldMap);
         System.out.println("***********************");
+
+        System.out.printf("%s,\t%s,\t%s,\t%s,\t%s",
+                "getName",
+                "isSynthetic",
+                "getType",
+                "getType",
+                "isEnumConstant"
+        );
+        System.out.println();
+
+        destFieldMap.keySet().forEach(
+                e -> {
+
+                    System.out.printf("%s,\t\t%s",
+                            destFieldMap.get(e).getName(),
+                            destFieldMap.get(e).getType()
+                    );
+
+                    System.out.println();
+                }
+        );
 
 
         final Set<String> destFields = destFieldMap.keySet();
