@@ -36,7 +36,7 @@ public class ExcelTest {
 //        workbook.save("Hello World.xlsx");
 
 
-        List<Xodim> departments = List.of(
+        List<Object> departments = List.of(
                 new Xodim("Abdulhay", "Uralov", 23, "Sergili"),
                 new Xodim("Muhriddin", "O'ralov", 21, "Xorazm"),
                 new Xodim("Doni", "Muqsinov", 45, "toshkent"),
@@ -48,7 +48,7 @@ public class ExcelTest {
     }
 
 
-    static void export(List<Xodim> objects) {
+    static void export(List<Object> objects) {
 
 
         if (!objects.isEmpty()) {
@@ -90,6 +90,7 @@ public class ExcelTest {
 
             try {
                 workbook.save("Hello World.xlsx");
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
