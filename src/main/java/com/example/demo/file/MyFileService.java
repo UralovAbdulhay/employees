@@ -34,6 +34,7 @@ public class MyFileService {
             if (multipartFile.getSize() == 0) {
                 throw BadRequest.get("MultipartFile ish empty!");
             }
+
             MyFile myFile = null;
             myFile = new MyFile(
                     UUID.randomUUID().toString(),

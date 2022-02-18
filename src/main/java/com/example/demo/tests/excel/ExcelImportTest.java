@@ -15,10 +15,8 @@ public class ExcelImportTest {
         // If using Professional version, put your serial key below.
         SpreadsheetInfo.setLicense("FREE-LIMITED-KEY");
 
+//        ExcelFile workbook = ExcelFile.load();
         ExcelFile workbook = ExcelFile.load("Hello World.xlsx");
-
-
-        List<Xodim> xodims = new ArrayList<>();
 
 
         int rowCount = workbook.getWorksheet(0).getRows().size();
@@ -64,13 +62,11 @@ public class ExcelImportTest {
 
         List<Xodim> xodimList = hashMaps
                 .stream()
-//                .skip(1)
                 .map(e -> {
 
                     try {
                         return mapper.convertValue(e, Xodim.class);
                     } catch (IllegalArgumentException ex) {
-//                        ex.printStackTrace();
                         return null;
                     }
                 })
@@ -83,19 +79,6 @@ public class ExcelImportTest {
         System.out.println(xodimList.size());
         System.out.println(xodimList.get(0));
         System.out.println(xodimList.get(0).getAddress());
-
-
-//        for (ExcelRow row : workbook.getWorksheet(0).getRows()) {
-//
-//
-//            for (ExcelCell cell : row.getAllocatedCells()) {
-//                if (cell.getValueType() != CellValueType.NULL)
-//                    System.out.println((("" + cell.getValue() + cell.getValueType())));
-//            }
-//        }
-//
-//
-//        ObjectMapper mapper = new ObjectMapper();
 
 
     }

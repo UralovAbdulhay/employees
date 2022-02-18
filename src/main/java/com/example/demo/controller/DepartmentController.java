@@ -1,12 +1,14 @@
 package com.example.demo.controller;
 
 import com.example.demo.controller.endpoint.DepartmentEndpoint;
+import com.example.demo.entity.Department;
 import com.example.demo.payload.Result;
 import com.example.demo.payload.requests.DepartmentRequest;
 import com.example.demo.service.impl.DepartmentServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
@@ -23,23 +25,23 @@ public class DepartmentController implements DepartmentEndpoint {
     public ResponseEntity<Result> save(DepartmentRequest request) {
         System.out.println(request);
 
-        return mapper(departmentService.save(request));
+        return mapToResponse(departmentService.save(request));
     }
 
     @Override
     public ResponseEntity<Result> update(DepartmentRequest request) {
-        return mapper(departmentService.update(request));
+        return mapToResponse(departmentService.update(request));
     }
 
     @Override
     public ResponseEntity<Result> get(@Min(1) @Valid @NotNull Long id) {
-        return mapper(departmentService.findById(id));
+        return mapToResponse(departmentService.findById(id));
 
     }
 
     @Override
     public ResponseEntity<Result> getAll(int page, int size) {
-        return mapper(departmentService.findAll(page, size));
+        return mapToResponse(departmentService.findAll(page, size));
     }
 
     @Override
@@ -47,7 +49,12 @@ public class DepartmentController implements DepartmentEndpoint {
         return ResponseEntity.ok(Result.deleted(departmentService.delete(id)));
     }
 
-    private ResponseEntity<Result> mapper(Object o) {
+    @Override
+    public ResponseEntity uploadFile(MultipartFile file) {
+        return mapToResponse(departmentService.importFromExcel(file, new DepartmentRequest()));
+    }
+
+    private ResponseEntity<Result> mapToResponse(Object o) {
         return ResponseEntity.ok(Result.ok(o));
     }
 }

@@ -1,12 +1,14 @@
 package com.example.demo.controller;
 
 import com.example.demo.controller.endpoint.AttendanceEndpoint;
+import com.example.demo.entity.Attendance;
 import com.example.demo.payload.Result;
 import com.example.demo.payload.requests.AttendanceRequest;
 import com.example.demo.service.impl.AttendanceServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -17,23 +19,23 @@ public class AttendanceController implements AttendanceEndpoint {
 
     @Override
     public ResponseEntity<Result> save(AttendanceRequest request) {
-        return mapper(attendanceService.save(request));
+        return mapToResponse(attendanceService.save(request));
     }
 
     @Override
     public ResponseEntity<Result> update(AttendanceRequest request) {
-        return mapper(attendanceService.update(request));
+        return mapToResponse(attendanceService.update(request));
     }
 
     @Override
     public ResponseEntity<Result> get(Long id) {
-        return mapper(attendanceService.findById(id));
+        return mapToResponse(attendanceService.findById(id));
 
     }
 
     @Override
     public ResponseEntity<Result> getAll(int page, int size) {
-        return mapper(attendanceService.findAll(page, size));
+        return mapToResponse(attendanceService.findAll(page, size));
     }
 
     @Override
@@ -41,7 +43,12 @@ public class AttendanceController implements AttendanceEndpoint {
         return ResponseEntity.ok(Result.deleted(attendanceService.delete(id)));
     }
 
-    private ResponseEntity<Result> mapper(Object o) {
+    @Override
+    public ResponseEntity uploadFile(MultipartFile file) {
+        return mapToResponse(attendanceService.importFromExcel(file, new AttendanceRequest()));
+    }
+
+    private ResponseEntity<Result> mapToResponse(Object o) {
         return ResponseEntity.ok(Result.ok(o));
     }
 }

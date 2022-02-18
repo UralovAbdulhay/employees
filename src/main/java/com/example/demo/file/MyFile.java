@@ -22,9 +22,7 @@ public class MyFile implements Serializable {
     @Column(unique = true)
     private String hashId;
 
-
     private String name;
-
 
     @JsonIgnore
     private String contentType;
@@ -38,6 +36,7 @@ public class MyFile implements Serializable {
     @JsonIgnore
     @Lob
     private byte[] data;
+
 
     public MyFile(String hashId, String name, String contentType, Long fileSize, byte[] data, String extension) {
         this.hashId = hashId;
