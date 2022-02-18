@@ -18,9 +18,7 @@ import javax.validation.Valid;
 import javax.validation.Validator;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +27,7 @@ public class AttendanceServiceImpl implements AttendanceService {
     private final AttendanceRepository attendanceRepository;
     private final Validator validator;
     private final EmployeeServiceImpl employeeService;
-    private final ObjectParser<Attendance, AttendanceRequest> objectParser;
+    private final ObjectParser objectParser;
 
 
     @Override
@@ -59,15 +57,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     }
 
-    @Override
-    public List<Attendance> saveAll(Collection<AttendanceRequest> requests) {
-        return requests.stream().map(this::save).collect(Collectors.toList());
-    }
 
-    @Override
-    public List<Attendance> updateAll(Collection<AttendanceRequest> requests) {
-        return requests.stream().map(this::update).collect(Collectors.toList());
-    }
 
     @Override
     public Attendance findById(@Valid @NotNull @Min(1) Long id) {
@@ -83,7 +73,12 @@ public class AttendanceServiceImpl implements AttendanceService {
     @Override
     public boolean delete(Long id) {
         attendanceRepository.deleteById(id);
-        return !existById(id);
+        return isDeleted(id);
+    }
+
+    @Override
+    public boolean isDeleted(Long id) {
+        return !attendanceRepository.existsById(id);
     }
 
     @Override
@@ -99,6 +94,14 @@ public class AttendanceServiceImpl implements AttendanceService {
     @Override
     public boolean isValidForSave(AttendanceRequest request) {
         return validator.validate(request, SaveValidation.class).size() == 0;
+    }
+
+    @Override
+    public AttendanceRequest convertToPayload(Attendance entity) {
+        AttendanceRequest request = new AttendanceRequest();
+        objectParser.copyFieldsIgnoreNulls(request, entity, true);
+        request.setEmployeeId(entity.getEmployee().getId());
+        return request;
     }
 
 

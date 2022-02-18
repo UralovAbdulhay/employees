@@ -15,9 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Validator;
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +23,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
 
     private final DepartmentRepository departmentRepository;
-    private final ObjectParser<Department, DepartmentRequest> objectParser;
+    private final ObjectParser objectParser;
 
     private final Validator validator;
 
@@ -52,15 +50,8 @@ public class DepartmentServiceImpl implements DepartmentService {
         }
     }
 
-    @Override
-    public List<Department> saveAll(Collection<DepartmentRequest> requests) {
-        return requests.stream().map(this::save).collect(Collectors.toList());
-    }
 
-    @Override
-    public List<Department> updateAll(Collection<DepartmentRequest> requests) {
-        return requests.stream().map(this::update).collect(Collectors.toList());
-    }
+
 
     @Override
     public Department findById(Long id) {
@@ -76,7 +67,12 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public boolean delete(Long id) {
         departmentRepository.deleteById(id);
-        return !existById(id);
+        return isDeleted(id);
+    }
+
+    @Override
+    public boolean isDeleted(Long id) {
+        return !departmentRepository.existsById(id);
     }
 
     @Override
@@ -92,5 +88,12 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public boolean isValidForSave(DepartmentRequest request) {
         return validator.validate(request, SaveValidation.class).size() == 0;
+    }
+
+    @Override
+    public DepartmentRequest convertToPayload(Department entity) {
+        DepartmentRequest request = new DepartmentRequest();
+        objectParser.copyFieldsIgnoreNulls(request, entity, true);
+        return request;
     }
 }

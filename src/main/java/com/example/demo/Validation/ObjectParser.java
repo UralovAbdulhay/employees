@@ -1,20 +1,6 @@
 package com.example.demo.Validation;
 
-import com.example.demo.base.BaseEntity;
-import com.example.demo.base.BaseRepository;
-import com.example.demo.base.BaseRequest;
-import com.example.demo.entity.Department;
-import com.example.demo.entity.Employee;
-import com.example.demo.entity.Position;
-import com.example.demo.exceptions.BadRequest;
-import com.example.demo.exceptions.ResourceNotFound;
-import com.example.demo.repository.AttendanceRepository;
-import com.example.demo.repository.DepartmentRepository;
-import com.example.demo.repository.EmployeeRepository;
-import com.example.demo.repository.PositionRepository;
-import com.example.demo.service.PositionService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
@@ -26,10 +12,10 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class ObjectParser<D extends BaseEntity, S extends BaseRequest> {
+public class ObjectParser {
 
 
-    public D copyFieldsIgnoreNulls(D dest, S src, boolean isNullIgnore) {
+    public <D, S> D copyFieldsIgnoreNulls(D dest, S src, boolean isNullIgnore) {
 
         List<Field> destFieldList = new ArrayList<>(List.of(dest.getClass().getDeclaredFields()));
         destFieldList.addAll(List.of(dest.getClass().getSuperclass().getDeclaredFields()));

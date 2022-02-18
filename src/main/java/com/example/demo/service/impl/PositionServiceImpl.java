@@ -18,9 +18,7 @@ import javax.validation.Valid;
 import javax.validation.Validator;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +26,7 @@ public class PositionServiceImpl implements PositionService {
 
     private final PositionRepository positionRepository;
     private final DepartmentServiceImpl departmentService;
-    private final ObjectParser<Position, PositionRequest> objectParser;
+    private final ObjectParser objectParser;
     private final Validator validator;
 
 
@@ -56,15 +54,6 @@ public class PositionServiceImpl implements PositionService {
         }
     }
 
-    @Override
-    public List<Position> saveAll(Collection<PositionRequest> requests) {
-        return requests.stream().map(this::save).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<Position> updateAll(Collection<PositionRequest> requests) {
-        return requests.stream().map(this::update).collect(Collectors.toList());
-    }
 
     @Override
     public Position findById(@Valid @NotNull @Min(1) Long id) {
@@ -80,7 +69,12 @@ public class PositionServiceImpl implements PositionService {
     @Override
     public boolean delete(Long id) {
         positionRepository.deleteById(id);
-        return !existById(id);
+        return isDeleted(id);
+    }
+
+    @Override
+    public boolean isDeleted(Long id) {
+        return !positionRepository.existsById(id);
     }
 
     @Override
@@ -98,5 +92,14 @@ public class PositionServiceImpl implements PositionService {
     public boolean isValidForSave(PositionRequest request) {
         return validator.validate(request, SaveValidation.class).size() == 0;
     }
+
+    @Override
+    public PositionRequest convertToPayload(Position entity) {
+        PositionRequest request = new PositionRequest();
+        objectParser.copyFieldsIgnoreNulls(request, entity, false);
+        request.setDepartmentId(entity.getDepartment().getId());
+        return request;
+    }
+
 
 }

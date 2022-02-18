@@ -3,14 +3,9 @@ package com.example.demo.base;
 import com.example.demo.Validation.ObjectParser;
 import com.example.demo.Validation.validatioinGroup.SaveValidation;
 import com.example.demo.Validation.validatioinGroup.UpdateValidation;
-import com.example.demo.entity.Attendance;
 import com.example.demo.exceptions.BadRequest;
 import com.example.demo.exceptions.ResourceNotFound;
-import com.example.demo.payload.requests.AttendanceRequest;
-import com.example.demo.service.AttendanceService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import javax.validation.Validator;
 import java.util.Set;
@@ -21,7 +16,7 @@ public abstract class BaseServiceImpl<D extends BaseEntity, S extends BaseReques
 
     private final Validator validator;
     private final BaseRepository<D> repository;
-    private final ObjectParser<D, S> objectParser;
+    private final ObjectParser objectParser;
 
     protected D validate(D entity, S request) {
         // Save qilish uchun validate qilish

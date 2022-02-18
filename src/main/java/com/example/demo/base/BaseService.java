@@ -1,28 +1,26 @@
 package com.example.demo.base;
 
-import com.example.demo.Validation.validatioinGroup.SaveValidation;
-import com.example.demo.Validation.validatioinGroup.UpdateValidation;
-import com.example.demo.exceptions.BadRequest;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.validation.Validator;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 
 public interface BaseService<E, R> {
 
-    E save(R t);
+    E save(R request);
 
-    E update(R t);
+    E update(R request);
 
-    List<E> saveAll(Collection<R> ts);
+    default List<E> saveAll(Collection<R> requests) {
+        return requests.stream().map(this::save).collect(Collectors.toList());
+    }
 
-    List<E> updateAll(Collection<R> ts);
+    default List<E> updateAll(Collection<R> requests) {
+        return requests.stream().map(this::update).collect(Collectors.toList());
+    }
 
     E findById(Long id);
 
@@ -30,10 +28,22 @@ public interface BaseService<E, R> {
 
     boolean delete(Long id);
 
+    boolean isDeleted(Long id);
+
     boolean existById(Long id);
 
-    boolean isValidForUpdate(R r);
+    boolean isValidForUpdate(R request);
 
-    boolean isValidForSave(R r);
+    boolean isValidForSave(R request);
+
+    R convertToPayload(E entity);
+
+    default List<R> convertToPayload(List<E> entities) {
+        return entities
+                .stream()
+                .map(this::convertToPayload)
+                .collect(Collectors.toList());
+    }
+
 
 }

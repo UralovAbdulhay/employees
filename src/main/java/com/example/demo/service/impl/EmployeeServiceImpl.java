@@ -18,9 +18,7 @@ import javax.validation.Valid;
 import javax.validation.Validator;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +28,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final PositionServiceImpl positionService;
     private final Validator validator;
-    private final ObjectParser<Employee, EmployeeRequest> objectParser;
+    private final ObjectParser objectParser;
 
 
     @Override
@@ -57,15 +55,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
     }
 
-    @Override
-    public List<Employee> saveAll(Collection<EmployeeRequest> requests) {
-        return requests.stream().map(this::save).collect(Collectors.toList());
-    }
 
-    @Override
-    public List<Employee> updateAll(Collection<EmployeeRequest> requests) {
-        return requests.stream().map(this::update).collect(Collectors.toList());
-    }
+
 
     @Override
     public Employee findById(@Valid @NotNull @Min(1) Long id) {
@@ -81,7 +72,12 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public boolean delete(Long id) {
         employeeRepository.deleteById(id);
-        return !existById(id);
+        return isDeleted(id);
+    }
+
+    @Override
+    public boolean isDeleted(Long id) {
+        return !employeeRepository.existsById(id);
     }
 
     @Override
@@ -98,5 +94,13 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public boolean isValidForSave(EmployeeRequest request) {
         return validator.validate(request, SaveValidation.class).size() == 0;
+    }
+
+    @Override
+    public EmployeeRequest convertToPayload(Employee entity) {
+        EmployeeRequest request = new EmployeeRequest();
+        objectParser.copyFieldsIgnoreNulls(request, entity, false);
+        request.setPositionId(entity.getPosition().getId());
+        return request;
     }
 }

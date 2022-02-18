@@ -6,6 +6,7 @@ import com.gembox.spreadsheet.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class ExcelImportTest {
@@ -30,7 +31,7 @@ public class ExcelImportTest {
 
         for (int i = 0; i < rows.size(); i++) {
             ExcelCellCollection cells = rows.get(i).getAllocatedCells();
-            HashMap<String, Object> map = new HashMap<String, Object>();
+            HashMap<String, Object> map = new HashMap<>();
 
             for (int j = 0; j < cells.size(); j++) {
                 ExcelCell cell = cells.get(j);
@@ -63,15 +64,26 @@ public class ExcelImportTest {
 
         List<Xodim> xodimList = hashMaps
                 .stream()
-                .skip(1)
-                .map(e -> mapper.convertValue(e, Xodim.class))
+//                .skip(1)
+                .map(e -> {
+
+                    try {
+                        return mapper.convertValue(e, Xodim.class);
+                    } catch (IllegalArgumentException ex) {
+//                        ex.printStackTrace();
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
 
 
         System.out.println();
         System.out.println(xodimList);
-        System.out.println(xodimList.get(1));
-        System.out.println(xodimList.get(1).getAddress());
+        System.out.println(xodimList.size());
+        System.out.println(xodimList.get(0));
+        System.out.println(xodimList.get(0).getAddress());
+
 
 //        for (ExcelRow row : workbook.getWorksheet(0).getRows()) {
 //
