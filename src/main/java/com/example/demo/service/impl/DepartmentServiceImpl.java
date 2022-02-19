@@ -51,8 +51,6 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
 
-
-
     @Override
     public Department findById(Long id) {
         return departmentRepository.findById(id).orElseThrow(() -> ResourceNotFound.get("Department", "id", id));
@@ -96,4 +94,11 @@ public class DepartmentServiceImpl implements DepartmentService {
         objectParser.copyFieldsIgnoreNulls(request, entity, true);
         return request;
     }
+
+
+    public String exportAll() {
+        return exportToExcel(convertToPayload(departmentRepository.findAll()));
+    }
+
+
 }

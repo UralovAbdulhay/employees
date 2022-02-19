@@ -1,12 +1,13 @@
 package com.example.demo.controller;
 
 import com.example.demo.controller.endpoint.DepartmentEndpoint;
-import com.example.demo.entity.Department;
+import com.example.demo.file.MyFileService;
 import com.example.demo.payload.Result;
 import com.example.demo.payload.requests.DepartmentRequest;
 import com.example.demo.service.impl.DepartmentServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,6 +20,7 @@ import javax.validation.constraints.NotNull;
 public class DepartmentController implements DepartmentEndpoint {
 
     private final DepartmentServiceImpl departmentService;
+    private final MyFileService myFileService;
 
 
     @Override
@@ -51,7 +53,13 @@ public class DepartmentController implements DepartmentEndpoint {
 
     @Override
     public ResponseEntity uploadFile(MultipartFile file) {
+        System.out.println(file.getContentType());
         return mapToResponse(departmentService.importFromExcel(file, new DepartmentRequest()));
+    }
+
+    @GetMapping("/export")
+    public ResponseEntity downloadExcelFile() {
+        return myFileService.downloadFileFromServer(departmentService.exportAll());
     }
 
     private ResponseEntity<Result> mapToResponse(Object o) {

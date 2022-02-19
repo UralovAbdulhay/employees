@@ -7,7 +7,13 @@ import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Service
@@ -107,6 +113,66 @@ public interface BaseService<E, R> {
 
         return resultList;
     }
+
+
+    default String exportToExcel(List<R> objects) {
+
+
+//        if (!objects.isEmpty()) {
+
+        SpreadsheetInfo.setLicense("FREE-LIMITED-KEY");
+
+        ExcelFile workbook = new ExcelFile();
+        ExcelWorksheet worksheet = workbook.addWorksheet("Hello World");
+
+        Object header = objects.get(0);
+        Field[] headerFields = header.getClass().getDeclaredFields();
+        int columnSize = headerFields.length;
+        AtomicInteger rowIndex = new AtomicInteger();
+
+        for (int i = 0; i < columnSize; i++) {
+            headerFields[i].setAccessible(true);
+            worksheet.getCell(rowIndex.get(), i).setValue(headerFields[i].getName());
+        }
+        rowIndex.incrementAndGet();
+        objects.forEach(
+                e -> {
+
+                    Field[] field = e.getClass().getDeclaredFields();
+                    for (int i = 0; i < field.length; i++) {
+                        field[i].setAccessible(true);
+                        try {
+                            worksheet.getCell(rowIndex.get(), i)
+                                    .setValue(field[i].get(e));
+
+                        } catch (IllegalAccessException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+
+                    rowIndex.incrementAndGet();
+
+                });
+
+
+        try {
+
+
+            String fileName = String.format("files/export/%s/export-%s.xlsx",
+                    DateTimeFormatter.ofPattern("dd-MM-yyyy").format(LocalDateTime.now()),
+                    DateTimeFormatter.ofPattern("dd-MM-yyyy HH-mm-ss SSS").format(LocalDateTime.now()));
+            new File(fileName).getParentFile().mkdirs();
+            workbook.save(fileName);
+
+            return fileName;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "";
+        }
+
+    }
+
 
 
 }

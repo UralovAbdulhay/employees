@@ -4,8 +4,11 @@ import com.gembox.spreadsheet.ExcelFile;
 import com.gembox.spreadsheet.ExcelWorksheet;
 import com.gembox.spreadsheet.SpreadsheetInfo;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -43,61 +46,80 @@ public class ExcelTest {
                 new Xodim("Ali", "Aliyev", 5, "Buxora"),
                 new Xodim("Olim", "qoraboyev", 354, "Chilonzor")
         );
-        export(departments);
+        System.out.println(export(departments));
 
     }
 
 
-    static void export(List<Object> objects) {
+    static String export(List<Object> objects) {
 
 
-        if (!objects.isEmpty()) {
+//        if (!objects.isEmpty()) {
 
-            SpreadsheetInfo.setLicense("FREE-LIMITED-KEY");
+        SpreadsheetInfo.setLicense("FREE-LIMITED-KEY");
 
-            ExcelFile workbook = new ExcelFile();
-            ExcelWorksheet worksheet = workbook.addWorksheet("Hello World");
+        ExcelFile workbook = new ExcelFile();
+        ExcelWorksheet worksheet = workbook.addWorksheet("Hello World");
 
-            Object header = objects.get(0);
-            Field[] headerFields = header.getClass().getDeclaredFields();
-            int columnSize = headerFields.length;
-            AtomicInteger rowIndex = new AtomicInteger();
+        Object header = objects.get(0);
+        Field[] headerFields = header.getClass().getDeclaredFields();
+        int columnSize = headerFields.length;
+        AtomicInteger rowIndex = new AtomicInteger();
 
-            for (int i = 0; i < columnSize; i++) {
-                headerFields[i].setAccessible(true);
-                worksheet.getCell(rowIndex.get(), i).setValue(headerFields[i].getName());
-            }
-            rowIndex.incrementAndGet();
-            objects.forEach(
-                    e -> {
-
-                        Field[] field = e.getClass().getDeclaredFields();
-                        for (int i = 0; i < field.length; i++) {
-                            field[i].setAccessible(true);
-                            try {
-                                worksheet.getCell(rowIndex.get(), i)
-                                        .setValue(field[i].get(e));
-
-                            } catch (IllegalAccessException ex) {
-                                ex.printStackTrace();
-                            }
-                        }
-
-                        rowIndex.incrementAndGet();
-
-                    });
-
-
-            try {
-                workbook.save("Hello World.xlsx");
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-
+        for (int i = 0; i < columnSize; i++) {
+            headerFields[i].setAccessible(true);
+            worksheet.getCell(rowIndex.get(), i).setValue(headerFields[i].getName());
         }
+        rowIndex.incrementAndGet();
+        objects.forEach(
+                e -> {
+
+                    Field[] field = e.getClass().getDeclaredFields();
+                    for (int i = 0; i < field.length; i++) {
+                        field[i].setAccessible(true);
+                        try {
+                            worksheet.getCell(rowIndex.get(), i)
+                                    .setValue(field[i].get(e));
+
+                        } catch (IllegalAccessException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+
+                    rowIndex.incrementAndGet();
+
+                });
+
+
+        try {
+
+
+            String fileName = String.format("files/export/%s/export-%s.xlsx",
+                    DateTimeFormatter.ofPattern("dd-MM-yyyy").format(LocalDateTime.now()),
+                    DateTimeFormatter.ofPattern("dd-MM-yyyy HH-mm-ss SSS").format(LocalDateTime.now()));
+            new File(fileName).getParentFile().mkdirs();
+            workbook.save(fileName);
+
+            return fileName;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "";
+        }
+
+
+//        }
+
+
     }
+
+//    public static void main(String[] args) {
+//
+//        System.out.println(
+//                String.format("%2$s %1$s", "salom", "dunyo" )
+//        );
+//
+//    }
 
 
 }
