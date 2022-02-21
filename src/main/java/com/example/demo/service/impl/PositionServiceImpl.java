@@ -45,7 +45,7 @@ public class PositionServiceImpl implements PositionService {
     @Override
     public Position update(PositionRequest request) {
         if (isValidForUpdate(request)) {
-            Position position = findById(request.getId());
+            Position position = findById((request.getId()));
             objectParser.copyFieldsIgnoreNulls(position, request, true);
             position.setDepartment(departmentService.findById(request.getDepartmentId()));
             return positionRepository.save(position);

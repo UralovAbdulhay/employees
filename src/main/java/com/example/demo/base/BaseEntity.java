@@ -32,7 +32,6 @@ public abstract class BaseEntity {
 
 
     @JsonIgnore
-//    @LastModifiedDate
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     protected LocalDateTime updateAt;

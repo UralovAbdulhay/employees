@@ -42,7 +42,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public Department update(DepartmentRequest request) {
         if (isValidForUpdate(request)) {
-            Department department = findById(request.getId());
+            Department department = findById((request.getId()));
             objectParser.copyFieldsIgnoreNulls(department, request, true);
             return departmentRepository.save(department);
         } else {

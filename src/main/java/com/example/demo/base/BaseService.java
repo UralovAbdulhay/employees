@@ -2,6 +2,9 @@ package com.example.demo.base;
 
 import com.example.demo.exceptions.BadRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import com.gembox.spreadsheet.*;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
@@ -94,24 +97,36 @@ public interface BaseService<E, R> {
 
         }
 
-        ObjectMapper mapper = new ObjectMapper();
-        System.out.println(hashMaps);
+//        ObjectMapper mapper = new ObjectMapper();
+
+
+        ObjectMapper mapper = new ObjectMapper()
+                .registerModule(new ParameterNamesModule())
+                .registerModule(new Jdk8Module())
+                .registerModule(new JavaTimeModule());
+
+        System.out.println("hashMaps = " + hashMaps);
         List<R> resultList = hashMaps
                 .stream()
+                .skip(1)
                 .map(e -> {
 
                     try {
+                        System.out.println(e);
                         return (R) mapper.convertValue(e, entity.getClass());
                     } catch (IllegalArgumentException ex) {
+                        ex.printStackTrace();
                         return null;
                     }
                 })
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
 
-        System.out.println(resultList);
+        System.out.println("resultList = " + resultList);
 
-        return resultList;
+
+        return convertToPayload(saveAll(resultList));
+
     }
 
 
@@ -164,7 +179,6 @@ public interface BaseService<E, R> {
 
 
         try {
-
 
             String fileName = String.format("files/export/%s/export-%s.xlsx",
                     DateTimeFormatter.ofPattern("dd-MM-yyyy").format(LocalDateTime.now()),

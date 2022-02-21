@@ -36,7 +36,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (isValidForSave(request)) {
             Employee employee = new Employee();
             objectParser.copyFieldsIgnoreNulls(employee, request, true);
-            employee.setPosition(positionService.findById(request.getPositionId()));
+            employee.setPosition(positionService.findById((request.getPositionId())));
             return employeeRepository.save(employee);
         } else {
             throw BadRequest.get("EmployeeRequest not available for saving ");
@@ -46,9 +46,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee update(EmployeeRequest request) {
         if (isValidForUpdate(request)) {
-            Employee employee = findById(request.getId());
+            Employee employee = findById((request.getId()));
             objectParser.copyFieldsIgnoreNulls(employee, request, true);
-            employee.setPosition(positionService.findById(request.getPositionId()));
+            employee.setPosition(positionService.findById((request.getPositionId())));
             return employeeRepository.save(employee);
         } else {
             throw BadRequest.get("EmployeeRequest not available for update ");
@@ -97,7 +97,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public EmployeeRequest convertToPayload(Employee entity) {
         EmployeeRequest request = new EmployeeRequest();
         objectParser.copyFieldsIgnoreNulls(request, entity, false);
-        request.setPositionId(entity.getPosition().getId());
+        request.setPositionId((entity.getPosition().getId()));
         return request;
     }
 

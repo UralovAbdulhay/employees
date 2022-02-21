@@ -3,6 +3,8 @@ package com.example.demo.payload.requests;
 import com.example.demo.Validation.validatioinGroup.SaveValidation;
 import com.example.demo.Validation.validatioinGroup.UpdateValidation;
 import com.example.demo.base.BaseRequest;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -17,6 +19,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class EmployeeRequest extends BaseRequest {
 
@@ -28,6 +31,7 @@ public class EmployeeRequest extends BaseRequest {
     String sureName;
 
     @NotNull(groups = SaveValidation.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm")
     @PastOrPresent(groups = {SaveValidation.class, UpdateValidation.class})
     LocalDateTime birthDate;
 

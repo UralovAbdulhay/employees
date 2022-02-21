@@ -5,6 +5,7 @@ import com.example.demo.Validation.validatioinGroup.UpdateValidation;
 import com.example.demo.base.BaseRequest;
 import com.example.demo.entity.types.AttendanceType;
 import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
@@ -19,6 +20,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AttendanceRequest extends BaseRequest {
 
@@ -29,7 +31,7 @@ public class AttendanceRequest extends BaseRequest {
     @NotNull(groups = SaveValidation.class)
     AttendanceType type;
 
-//    @JsonFilter()
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm")
     @NotNull(groups = SaveValidation.class)
     @PastOrPresent(groups = {SaveValidation.class, UpdateValidation.class})
     LocalDateTime eventTime;

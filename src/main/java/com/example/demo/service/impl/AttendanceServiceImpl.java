@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import javax.validation.Validator;
@@ -47,7 +48,7 @@ public class AttendanceServiceImpl implements AttendanceService {
     public Attendance update(AttendanceRequest request) {
 
         if (isValidForUpdate(request)) {
-            Attendance attendance = findById(request.getId());
+            Attendance attendance = findById((request.getId()));
             objectParser.copyFieldsIgnoreNulls(attendance, request, true);
             attendance.setEmployee(employeeService.findById(request.getEmployeeId()));
             return attendanceRepository.save(attendance);

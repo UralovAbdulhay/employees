@@ -3,6 +3,7 @@ package com.example.demo.base;
 
 import com.example.demo.Validation.validatioinGroup.SaveValidation;
 import com.example.demo.Validation.validatioinGroup.UpdateValidation;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,7 @@ import javax.validation.constraints.Null;
 @NoArgsConstructor
 @AllArgsConstructor
 @MappedSuperclass
+@JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class BaseRequest {
 
     @NotNull(groups = UpdateValidation.class, message = "Id null bo'lishi mumkin emas")

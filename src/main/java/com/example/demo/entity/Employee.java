@@ -1,6 +1,7 @@
 package com.example.demo.entity;
 
 import com.example.demo.base.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -26,7 +27,8 @@ public class Employee extends BaseEntity {
     String sureName;
 
     @Column(nullable = false)
-    LocalDateTime birthDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    LocalDate birthDate;
 
     @ManyToOne
     @JoinColumn(nullable = false)
