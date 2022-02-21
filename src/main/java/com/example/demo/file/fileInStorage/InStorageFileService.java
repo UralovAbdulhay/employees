@@ -1,4 +1,4 @@
-package com.example.demo.file;
+package com.example.demo.file.fileInStorage;
 
 
 import com.example.demo.exceptions.BadRequest;
@@ -28,9 +28,9 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.REQUIRED, rollbackFor = {Exception.class, RuntimeException.class, BadRequest.class})
-public class MyFileService {
+public class InStorageFileService {
 
-    private final MyFileRepository myFileRepository;
+    private final InStorageFileRepository inStorageFileRepository;
 
 
     public Result save(MultipartFile multipartFile) {
@@ -39,24 +39,25 @@ public class MyFileService {
                 throw BadRequest.get("MultipartFile ish empty!");
             }
 
-            MyFile myFile = null;
-            myFile = new MyFile(
+            InStorageFile inStorageFile =
+                    new InStorageFile(
                     UUID.randomUUID().toString(),
                     multipartFile.getOriginalFilename(),
                     multipartFile.getContentType(),
+                    getExtension(Objects.requireNonNull(multipartFile.getOriginalFilename())),
                     multipartFile.getSize(),
-                    multipartFile.getBytes(),
-                    getExtension(Objects.requireNonNull(multipartFile.getOriginalFilename()))
+                    multipartFile.getBytes()
             );
 
 
+
             // save MyFile into base
-            myFileRepository.save(myFile);
+            inStorageFileRepository.save(inStorageFile);
             System.out.println("\n save myFile %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n");
-            System.out.println(myFile);
+            System.out.println(inStorageFile);
             System.out.println("\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n");
 
-            return new Result("File successfully saved!", true, myFile);
+            return new Result("File successfully saved!", true, inStorageFile);
         } catch (Exception e) {
             e.printStackTrace();
             throw BadRequest.get(e.getMessage());
@@ -68,9 +69,9 @@ public class MyFileService {
             if (multipartFiles.stream().anyMatch(e -> e.getSize() == 0)) {
                 throw BadRequest.get("MultipartFile ish empty!");
             }
-            List<MyFile> myFiles = null;
-            myFiles = multipartFiles.stream().map(e -> {
-                MyFile myFile = new MyFile(
+            List<InStorageFile> inStorageFiles = null;
+            inStorageFiles = multipartFiles.stream().map(e -> {
+                InStorageFile inStorageFile = new InStorageFile(
                         UUID.randomUUID().toString(),
                         e.getOriginalFilename(),
                         e.getContentType(),
@@ -79,21 +80,21 @@ public class MyFileService {
                 );
 
                 try {
-                    myFile.setData(e.getBytes());
+                    inStorageFile.setData(e.getBytes());
                 } catch (IOException ex) {
                     ex.printStackTrace();
-                    myFile = null;
+                    inStorageFile = null;
                 }
-                return myFile;
+                return inStorageFile;
             })
                     .collect(Collectors.toList());
             System.out.println("\n****************************************\n");
-            System.out.println("myFile from request = \n" + myFiles);
+            System.out.println("myFile from request = \n" + inStorageFiles);
             System.out.println("\n****************************************\n");
 
             // save MyFile into base
-            myFileRepository.saveAll(myFiles);
-            return new Result("File successfully saved!", true, myFiles);
+            inStorageFileRepository.saveAll(inStorageFiles);
+            return new Result("File successfully saved!", true, inStorageFiles);
         } catch (Exception e) {
             e.printStackTrace();
             throw BadRequest.get(e.getMessage());
@@ -102,21 +103,21 @@ public class MyFileService {
 
 
     public ResponseEntity<ByteArrayResource> downloadFile(String fileId) {
-        MyFile myFile = findByHashId(fileId);
+        InStorageFile inStorageFile = findByHashId(fileId);
         return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(myFile.getContentType()))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + myFile.getName() + "\"")
-                .body(new ByteArrayResource(myFile.getData()));
+                .contentType(MediaType.parseMediaType(inStorageFile.getContentType()))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + inStorageFile.getName() + "\"")
+                .body(new ByteArrayResource(inStorageFile.getData()));
     }
 
 
     public ResponseEntity<ByteArrayResource> previewFile(String fileId) {
-        MyFile myFile = findByHashId(fileId);
+        InStorageFile inStorageFile = findByHashId(fileId);
 //        System.out.println("previewFile = " + myFile);
         return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(myFile.getContentType()))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + myFile.getName() + "\"")
-                .body(new ByteArrayResource(myFile.getData()));
+                .contentType(MediaType.parseMediaType(inStorageFile.getContentType()))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + inStorageFile.getName() + "\"")
+                .body(new ByteArrayResource(inStorageFile.getData()));
     }
 
     @SneakyThrows
@@ -146,29 +147,29 @@ public class MyFileService {
         return fileName.substring(fileName.lastIndexOf(".") + 1);
     }
 
-    public MyFile findByHashId(String hashId) {
-        return myFileRepository.findByHashId(hashId).orElseThrow(() -> new ResourceNotFound("MyFile", "hashId", hashId));
+    public InStorageFile findByHashId(String hashId) {
+        return inStorageFileRepository.findByHashId(hashId).orElseThrow(() -> new ResourceNotFound("MyFile", "hashId", hashId));
     }
 
 
-    public List<MyFile> findAllByHashId(List<String> hashId) {
-        return myFileRepository.findByHashIdIn(hashId);
+    public List<InStorageFile> findAllByHashId(List<String> hashId) {
+        return inStorageFileRepository.findByHashIdIn(hashId);
     }
 
     public Result delete(String hashId) {
-        myFileRepository.delete(findByHashId(hashId));
-        return Result.deleted(!myFileRepository.existsByHashId(hashId));
+        inStorageFileRepository.delete(findByHashId(hashId));
+        return Result.deleted(!inStorageFileRepository.existsByHashId(hashId));
     }
 
     public Result deleteAllByHashId(List<String> hashId) {
-        myFileRepository.deleteAll(findAllByHashId(hashId));
-        return Result.deleted(!myFileRepository.existsByHashId(hashId.get(0)));
+        inStorageFileRepository.deleteAll(findAllByHashId(hashId));
+        return Result.deleted(!inStorageFileRepository.existsByHashId(hashId.get(0)));
     }
 
-    public Result deleteAll(List<MyFile> hashId) {
+    public Result deleteAll(List<InStorageFile> hashId) {
         hashId.get(0);
-        myFileRepository.deleteAll(hashId);
-        return Result.deleted(!myFileRepository.exists(Example.of(hashId.get(0))));
+        inStorageFileRepository.deleteAll(hashId);
+        return Result.deleted(!inStorageFileRepository.exists(Example.of(hashId.get(0))));
     }
 
 

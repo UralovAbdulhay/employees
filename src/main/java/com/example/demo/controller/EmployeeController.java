@@ -1,10 +1,10 @@
 package com.example.demo.controller;
 
 import com.example.demo.controller.endpoint.EmployeeEndpoint;
-import com.example.demo.file.MyFileService;
 import com.example.demo.payload.Result;
 import com.example.demo.payload.requests.EmployeeRequest;
 import com.example.demo.service.impl.EmployeeServiceImpl;
+import com.example.demo.service.impl.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class EmployeeController implements EmployeeEndpoint {
     private final EmployeeServiceImpl employeeService;
-    private final MyFileService myFileService;
+    private final FileService fileService;
 
 
     @Override
@@ -51,7 +51,7 @@ public class EmployeeController implements EmployeeEndpoint {
 
     @Override
     public ResponseEntity<ByteArrayResource> downloadExcelFile() {
-        return myFileService.downloadFileFromServer(employeeService.exportAll());
+        return fileService.downloadFileFromServer(employeeService.exportAll());
     }
 
     private ResponseEntity<Result> mapToResponse(Object o) {

@@ -1,4 +1,4 @@
-package com.example.demo.file;
+package com.example.demo.file.fileInStorage;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
@@ -16,7 +16,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Data
 @Entity
-public class MyFile implements Serializable {
+public class InStorageFile implements Serializable {
 
     @Id
     @Column(unique = true)
@@ -37,23 +37,16 @@ public class MyFile implements Serializable {
     @Lob
     private byte[] data;
 
+    @JsonIgnore
+    private String uploadPath;
 
-    public MyFile(String hashId, String name, String contentType, Long fileSize, byte[] data, String extension) {
+    public InStorageFile(String hashId, String name, String contentType, String extension, Long fileSize, byte[] data) {
         this.hashId = hashId;
         this.name = name;
         this.contentType = contentType;
+        this.extension = extension;
         this.fileSize = fileSize;
         this.data = data;
-        this.extension = extension;
-    }
-
-
-    public MyFile(String hashId, String name, String contentType, Long fileSize, String extension) {
-        this.hashId = hashId;
-        this.name = name;
-        this.contentType = contentType;
-        this.fileSize = fileSize;
-        this.extension = extension;
     }
 
     @Override

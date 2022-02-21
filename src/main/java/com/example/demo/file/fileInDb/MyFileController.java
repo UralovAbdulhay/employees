@@ -1,8 +1,7 @@
-package com.example.demo.controller;
+package com.example.demo.file.fileInDb;
 
 
 
-import com.example.demo.file.MyFileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +27,7 @@ public class MyFileController {
         return ResponseEntity.ok(myFileService.saveAll(files));
     }
 
-    @PostMapping("/save")
+      @PostMapping("/save")
     public ResponseEntity uploadFile(@RequestParam("files") MultipartFile file) {
         System.out.println(file);
         return ResponseEntity.ok(myFileService.save(file));

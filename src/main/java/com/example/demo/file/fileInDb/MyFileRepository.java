@@ -1,4 +1,4 @@
-package com.example.demo.file;
+package com.example.demo.file.fileInDb;
 
 
 import org.springframework.data.jpa.repository.JpaRepository;

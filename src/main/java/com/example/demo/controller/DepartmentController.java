@@ -1,10 +1,10 @@
 package com.example.demo.controller;
 
 import com.example.demo.controller.endpoint.DepartmentEndpoint;
-import com.example.demo.file.MyFileService;
 import com.example.demo.payload.Result;
 import com.example.demo.payload.requests.DepartmentRequest;
 import com.example.demo.service.impl.DepartmentServiceImpl;
+import com.example.demo.service.impl.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +20,7 @@ import javax.validation.constraints.NotNull;
 public class DepartmentController implements DepartmentEndpoint {
 
     private final DepartmentServiceImpl departmentService;
-    private final MyFileService myFileService;
+    private final FileService fileService;
 
 
     @Override
@@ -59,7 +59,7 @@ public class DepartmentController implements DepartmentEndpoint {
 
     @Override
     public ResponseEntity<ByteArrayResource> downloadExcelFile() {
-        return myFileService.downloadFileFromServer(departmentService.exportAll());
+        return fileService.downloadFileFromServer(departmentService.exportAll());
     }
 
     private ResponseEntity<Result> mapToResponse(Object o) {
