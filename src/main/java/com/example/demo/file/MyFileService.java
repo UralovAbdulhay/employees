@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.shaded.apache.poi.util.IOUtils;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Example;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -18,7 +17,9 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -120,25 +121,23 @@ public class MyFileService {
 
     @SneakyThrows
     public ResponseEntity<ByteArrayResource> downloadFileFromServer(String fileId) {
-        MyFile myFile = findByHashId(fileId);
         File file = new File(fileId);
 
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + myFile.getName() + "\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"")
                 .body(new ByteArrayResource(IOUtils.toByteArray(new FileInputStream(file))));
 
     }
 
 
     @SneakyThrows
-    public ResponseEntity<ByteArrayResource> previewFileFromServer(String fileId) throws FileNotFoundException {
-        MyFile myFile = findByHashId(fileId);
+    public ResponseEntity<ByteArrayResource> previewFileFromServer(String fileId) {
         File file = new File(fileId);
 
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + myFile.getName() + "\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + file.getName() + "\"")
                 .body(new ByteArrayResource(IOUtils.toByteArray(new FileInputStream(file))));
     }
 

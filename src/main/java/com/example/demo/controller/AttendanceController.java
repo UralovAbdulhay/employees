@@ -2,10 +2,12 @@ package com.example.demo.controller;
 
 import com.example.demo.controller.endpoint.AttendanceEndpoint;
 import com.example.demo.entity.Attendance;
+import com.example.demo.file.MyFileService;
 import com.example.demo.payload.Result;
 import com.example.demo.payload.requests.AttendanceRequest;
 import com.example.demo.service.impl.AttendanceServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class AttendanceController implements AttendanceEndpoint {
 
     private final AttendanceServiceImpl attendanceService;
+    private final MyFileService myFileService;
 
 
     @Override
@@ -46,6 +49,11 @@ public class AttendanceController implements AttendanceEndpoint {
     @Override
     public ResponseEntity uploadFile(MultipartFile file) {
         return mapToResponse(attendanceService.importFromExcel(file, new AttendanceRequest()));
+    }
+
+    @Override
+    public ResponseEntity<ByteArrayResource> downloadExcelFile() {
+        return myFileService.downloadFileFromServer(attendanceService.exportAll());
     }
 
     private ResponseEntity<Result> mapToResponse(Object o) {

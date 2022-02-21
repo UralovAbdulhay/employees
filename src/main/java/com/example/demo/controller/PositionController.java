@@ -1,10 +1,12 @@
 package com.example.demo.controller;
 
 import com.example.demo.controller.endpoint.PositionEndpoint;
+import com.example.demo.file.MyFileService;
 import com.example.demo.payload.Result;
 import com.example.demo.payload.requests.PositionRequest;
 import com.example.demo.service.impl.PositionServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class PositionController implements PositionEndpoint {
 
     private final PositionServiceImpl positionService;
+    private final MyFileService myFileService;
 
     @Override
     public ResponseEntity<Result> save(PositionRequest request) {
@@ -46,6 +49,11 @@ public class PositionController implements PositionEndpoint {
         System.out.println(file.getSize());
         System.out.println(file.getOriginalFilename());
         return mapToResponse(positionService.importFromExcel(file, new PositionRequest()));
+    }
+
+    @Override
+    public ResponseEntity<ByteArrayResource> downloadExcelFile() {
+        return myFileService.downloadFileFromServer(positionService.exportAll());
     }
 
     private ResponseEntity<Result> mapToResponse(Object o) {

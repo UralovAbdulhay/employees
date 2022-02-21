@@ -101,5 +101,10 @@ public class PositionServiceImpl implements PositionService {
         return request;
     }
 
+    @Override
+    public String exportAll() {
+        return exportToExcel(convertToPayload(positionRepository.findAll()));
+    }
+
 
 }

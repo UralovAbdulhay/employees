@@ -1,6 +1,7 @@
 package com.example.demo.base;
 
 import com.example.demo.payload.Result;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,4 +30,7 @@ public interface BaseEndpoint<T> {
     ResponseEntity uploadFile(@RequestParam("file") MultipartFile file);
 
 
-}
+    @GetMapping("/export")
+    ResponseEntity<ByteArrayResource> downloadExcelFile();
+
+    }

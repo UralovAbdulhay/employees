@@ -96,6 +96,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
 
+    @Override
     public String exportAll() {
         return exportToExcel(convertToPayload(departmentRepository.findAll()));
     }

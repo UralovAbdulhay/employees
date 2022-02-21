@@ -1,12 +1,12 @@
 package com.example.demo.controller;
 
 import com.example.demo.controller.endpoint.EmployeeEndpoint;
-import com.example.demo.entity.Department;
-import com.example.demo.entity.Employee;
+import com.example.demo.file.MyFileService;
 import com.example.demo.payload.Result;
 import com.example.demo.payload.requests.EmployeeRequest;
 import com.example.demo.service.impl.EmployeeServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class EmployeeController implements EmployeeEndpoint {
     private final EmployeeServiceImpl employeeService;
+    private final MyFileService myFileService;
 
 
     @Override
@@ -46,6 +47,11 @@ public class EmployeeController implements EmployeeEndpoint {
     @Override
     public ResponseEntity uploadFile(MultipartFile file) {
         return mapToResponse(employeeService.importFromExcel(file, new EmployeeRequest()));
+    }
+
+    @Override
+    public ResponseEntity<ByteArrayResource> downloadExcelFile() {
+        return myFileService.downloadFileFromServer(employeeService.exportAll());
     }
 
     private ResponseEntity<Result> mapToResponse(Object o) {

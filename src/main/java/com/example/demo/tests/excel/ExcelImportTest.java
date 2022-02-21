@@ -31,6 +31,7 @@ public class ExcelImportTest {
             ExcelCellCollection cells = rows.get(i).getAllocatedCells();
             HashMap<String, Object> map = new HashMap<>();
 
+
             for (int j = 0; j < cells.size(); j++) {
                 ExcelCell cell = cells.get(j);
                 if (cell.getValueType() != CellValueType.NULL) {

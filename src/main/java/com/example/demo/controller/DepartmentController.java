@@ -6,8 +6,8 @@ import com.example.demo.payload.Result;
 import com.example.demo.payload.requests.DepartmentRequest;
 import com.example.demo.service.impl.DepartmentServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -57,8 +57,8 @@ public class DepartmentController implements DepartmentEndpoint {
         return mapToResponse(departmentService.importFromExcel(file, new DepartmentRequest()));
     }
 
-    @GetMapping("/export")
-    public ResponseEntity downloadExcelFile() {
+    @Override
+    public ResponseEntity<ByteArrayResource> downloadExcelFile() {
         return myFileService.downloadFileFromServer(departmentService.exportAll());
     }
 

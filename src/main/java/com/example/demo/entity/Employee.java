@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -25,7 +26,7 @@ public class Employee extends BaseEntity {
     String sureName;
 
     @Column(nullable = false)
-    LocalDate birthDate;
+    LocalDateTime birthDate;
 
     @ManyToOne
     @JoinColumn(nullable = false)

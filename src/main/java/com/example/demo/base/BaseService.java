@@ -123,16 +123,20 @@ public interface BaseService<E, R> {
         SpreadsheetInfo.setLicense("FREE-LIMITED-KEY");
 
         ExcelFile workbook = new ExcelFile();
-        ExcelWorksheet worksheet = workbook.addWorksheet("Hello World");
+        ExcelWorksheet worksheet = workbook.addWorksheet("Export");
 
         Object header = objects.get(0);
         Field[] headerFields = header.getClass().getDeclaredFields();
         int columnSize = headerFields.length;
         AtomicInteger rowIndex = new AtomicInteger();
 
+        int firstRow = 0, firstCol = 0, lastRow = headerFields.length, lastCol = objects.size();
+
         for (int i = 0; i < columnSize; i++) {
             headerFields[i].setAccessible(true);
             worksheet.getCell(rowIndex.get(), i).setValue(headerFields[i].getName());
+            worksheet.getCell(rowIndex.get(), i).getStyle().getFont().setWeight(ExcelFont.BOLD_WEIGHT);
+//            worksheet.getCell(rowIndex.get(), i).getStyle().getBorders().setBorders(MultipleBorders.all(), SpreadsheetColor.fromName(ColorName.BLACK), LineStyle.THIN);
         }
         rowIndex.incrementAndGet();
         objects.forEach(
@@ -154,6 +158,9 @@ public interface BaseService<E, R> {
 
                 });
 
+        CellRange cells = worksheet.getUsedCellRange(true);
+        cells.getStyle().getBorders().setBorders(MultipleBorders.all(), SpreadsheetColor.fromName(ColorName.BLACK), LineStyle.THIN);
+
 
         try {
 
@@ -173,6 +180,6 @@ public interface BaseService<E, R> {
 
     }
 
-
+    String exportAll();
 
 }

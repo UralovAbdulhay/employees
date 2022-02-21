@@ -104,5 +104,10 @@ public class AttendanceServiceImpl implements AttendanceService {
         return request;
     }
 
+    @Override
+    public String exportAll() {
+        return exportToExcel(convertToPayload(attendanceRepository.findAll()));
+    }
+
 
 }

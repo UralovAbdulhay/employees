@@ -55,9 +55,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
     }
 
-
-
-
     @Override
     public Employee findById(@Valid @NotNull @Min(1) Long id) {
         return employeeRepository.findById(id).orElseThrow(() -> ResourceNotFound.get("Employee", "id", id));
@@ -102,5 +99,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         objectParser.copyFieldsIgnoreNulls(request, entity, false);
         request.setPositionId(entity.getPosition().getId());
         return request;
+    }
+
+    @Override
+    public String exportAll() {
+        return exportToExcel(convertToPayload(employeeRepository.findAll()));
     }
 }
