@@ -23,6 +23,8 @@ public class ObjectParser {
                 .stream()
                 .collect(Collectors.toMap(Field::getName, e -> e));
 
+        System.out.println(destFieldList);
+
 
         List<Field> srcFieldList = new ArrayList<>(List.of(src.getClass().getDeclaredFields()));
         srcFieldList.addAll(List.of(src.getClass().getSuperclass().getDeclaredFields()));

@@ -126,6 +126,7 @@ public interface BaseService<E, R> {
         ExcelWorksheet worksheet = workbook.addWorksheet("Export");
 
         Object header = objects.get(0);
+        System.out.println(header);
         Field[] headerFields = header.getClass().getDeclaredFields();
         int columnSize = headerFields.length;
         AtomicInteger rowIndex = new AtomicInteger();
