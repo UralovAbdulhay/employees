@@ -18,16 +18,19 @@ import java.io.FileInputStream;
 @Service
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.REQUIRED, rollbackFor = {Exception.class, RuntimeException.class, BadRequest.class})
-public class FileService {
+public class ExportFileService {
 
     @SneakyThrows
     public ResponseEntity<ByteArrayResource> downloadFileFromServer(String fileId) {
         File file = new File(fileId);
 
-        return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"")
-                .body(new ByteArrayResource(IOUtils.toByteArray(new FileInputStream(file))));
+        return file.exists() ?
+                ResponseEntity.ok()
+                        .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"")
+                        .body(new ByteArrayResource(IOUtils.toByteArray(new FileInputStream(file))))
+                :
+                null;
 
     }
 

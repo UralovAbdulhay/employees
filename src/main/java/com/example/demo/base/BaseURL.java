@@ -17,10 +17,11 @@ public interface BaseURL {
     String IMPORT = "/import";
     String EXPORT = "/export";
     String PATH_VARIABLE = "/{id}";
-    
 
-
-
+    // paths
+    String COMMON_FILE_PATH = "common";
+    String EMPLOYEE_FILE_PATH = "employee";
+    String EXPORT_FILE_PATH = "employee";
 
 
 }

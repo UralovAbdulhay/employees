@@ -3,10 +3,9 @@ package com.example.demo.payload.requests;
 import com.example.demo.Validation.validatioinGroup.SaveValidation;
 import com.example.demo.Validation.validatioinGroup.UpdateValidation;
 import com.example.demo.base.BaseRequest;
+import com.example.demo.entity.Attendance;
 import com.example.demo.entity.types.AttendanceType;
-import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -35,6 +34,15 @@ public class AttendanceRequest extends BaseRequest {
     @NotNull(groups = SaveValidation.class)
     @PastOrPresent(groups = {SaveValidation.class, UpdateValidation.class})
     LocalDateTime eventTime;
+
+
+    public static AttendanceRequest getInstance(Attendance attendance) {
+        AttendanceRequest request = new AttendanceRequest(attendance.getEmployee().getId(), attendance.getType(), attendance.getEventTime());
+        request.setId(attendance.getId());
+        return request;
+    }
+
+
 
 }
 

@@ -4,7 +4,7 @@ import com.example.demo.controller.endpoint.DepartmentEndpoint;
 import com.example.demo.payload.Result;
 import com.example.demo.payload.requests.DepartmentRequest;
 import com.example.demo.service.impl.DepartmentServiceImpl;
-import com.example.demo.service.impl.FileService;
+import com.example.demo.service.impl.ExportFileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +20,7 @@ import javax.validation.constraints.NotNull;
 public class DepartmentController implements DepartmentEndpoint {
 
     private final DepartmentServiceImpl departmentService;
-    private final FileService fileService;
+    private final ExportFileService exportFileService;
 
 
     @Override
@@ -52,14 +52,14 @@ public class DepartmentController implements DepartmentEndpoint {
     }
 
     @Override
-    public ResponseEntity uploadFile(MultipartFile file) {
+    public ResponseEntity importFromExcelFile(MultipartFile file) {
         System.out.println(file.getContentType());
         return mapToResponse(departmentService.importFromExcel(file, new DepartmentRequest()));
     }
 
     @Override
     public ResponseEntity<ByteArrayResource> downloadExcelFile() {
-        return fileService.downloadFileFromServer(departmentService.exportAll());
+        return exportFileService.downloadFileFromServer(departmentService.exportAll());
     }
 
     private ResponseEntity<Result> mapToResponse(Object o) {

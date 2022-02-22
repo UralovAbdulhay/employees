@@ -32,14 +32,13 @@ public class PositionServiceImpl implements PositionService {
 
     @Override
     public Position save(PositionRequest request) {
+        Position position = new Position();
         if (isValidForSave(request)) {
-            Position position = new Position();
             objectParser.copyFieldsIgnoreNulls(position, request, true);
             position.setDepartment(departmentService.findById(request.getDepartmentId()));
             return positionRepository.save(position);
-        } else {
-            throw BadRequest.get("PositionRequest not available for saving ");
         }
+        return position;
     }
 
     @Override
@@ -95,10 +94,7 @@ public class PositionServiceImpl implements PositionService {
 
     @Override
     public PositionRequest convertToPayload(Position entity) {
-        PositionRequest request = new PositionRequest();
-        objectParser.copyFieldsIgnoreNulls(request, entity, false);
-        request.setDepartmentId(entity.getDepartment().getId());
-        return request;
+        return PositionRequest.getInstance(entity);
     }
 
     @Override

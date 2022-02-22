@@ -3,9 +3,11 @@ package com.example.demo.service.impl;
 import com.example.demo.Validation.ObjectParser;
 import com.example.demo.Validation.validatioinGroup.SaveValidation;
 import com.example.demo.Validation.validatioinGroup.UpdateValidation;
+import com.example.demo.base.BaseURL;
 import com.example.demo.entity.Employee;
 import com.example.demo.exceptions.BadRequest;
 import com.example.demo.exceptions.ResourceNotFound;
+import com.example.demo.file.fileInStorage.InStorageFileService;
 import com.example.demo.payload.requests.EmployeeRequest;
 import com.example.demo.repository.EmployeeRepository;
 import com.example.demo.service.EmployeeService;
@@ -13,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import javax.validation.Validator;
@@ -29,18 +32,20 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final PositionServiceImpl positionService;
     private final Validator validator;
     private final ObjectParser objectParser;
+    private final InStorageFileService storageFileService;
 
 
     @Override
     public Employee save(EmployeeRequest request) {
+        System.out.println("**************************************");
+        System.out.println(request);
+        Employee employee = new Employee();
         if (isValidForSave(request)) {
-            Employee employee = new Employee();
             objectParser.copyFieldsIgnoreNulls(employee, request, true);
             employee.setPosition(positionService.findById((request.getPositionId())));
             return employeeRepository.save(employee);
-        } else {
-            throw BadRequest.get("EmployeeRequest not available for saving ");
         }
+        return employee;
     }
 
     @Override
@@ -90,19 +95,26 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public boolean isValidForSave(EmployeeRequest request) {
+        System.out.println("isValidForSave ########################");
+        System.out.println(validator.validate(request, SaveValidation.class));
         return validator.validate(request, SaveValidation.class).size() == 0;
     }
 
     @Override
     public EmployeeRequest convertToPayload(Employee entity) {
-        EmployeeRequest request = new EmployeeRequest();
-        objectParser.copyFieldsIgnoreNulls(request, entity, false);
-        request.setPositionId((entity.getPosition().getId()));
-        return request;
+        return EmployeeRequest.getInstance(entity);
     }
 
     @Override
     public String exportAll() {
         return exportToExcel(convertToPayload(employeeRepository.findAll()));
     }
+
+    public EmployeeRequest uploadImg(Long id, MultipartFile multipartFile) {
+        Employee employee = findById(id);
+        employee.setImage(storageFileService.save(multipartFile, BaseURL.EMPLOYEE_FILE_PATH));
+        employeeRepository.save(employee);
+        return EmployeeRequest.getInstance(employee);
+    }
+
 }

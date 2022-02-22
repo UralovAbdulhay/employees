@@ -5,10 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Lob;
+import javax.persistence.*;
 import java.io.Serializable;
 
 
@@ -35,10 +32,12 @@ public class InStorageFile implements Serializable {
 
     @JsonIgnore
     @Lob
+    @Basic(fetch = FetchType.LAZY)
     private byte[] data;
 
     @JsonIgnore
     private String uploadPath;
+
 
     public InStorageFile(String hashId, String name, String contentType, String extension, Long fileSize, byte[] data) {
         this.hashId = hashId;

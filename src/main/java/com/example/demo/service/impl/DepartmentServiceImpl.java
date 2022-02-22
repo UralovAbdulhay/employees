@@ -30,13 +30,12 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public Department save(DepartmentRequest request) {
+        Department department = new Department();
         if (isValidForSave(request)) {
-            Department department = new Department();
             objectParser.copyFieldsIgnoreNulls(department, request, true);
             return departmentRepository.save(department);
-        } else {
-            throw BadRequest.get("DepartmentRequest not available for saving ");
         }
+        return department;
     }
 
     @Override
@@ -90,9 +89,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public DepartmentRequest convertToPayload(Department entity) {
-        DepartmentRequest request = new DepartmentRequest();
-        objectParser.copyFieldsIgnoreNulls(request, entity, true);
-        return request;
+        return DepartmentRequest.getInstance(entity);
     }
 
 

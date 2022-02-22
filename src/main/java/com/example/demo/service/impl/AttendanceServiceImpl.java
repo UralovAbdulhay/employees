@@ -13,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import javax.validation.Validator;
@@ -34,14 +33,13 @@ public class AttendanceServiceImpl implements AttendanceService {
     @Override
     public Attendance save(AttendanceRequest request) {
 
+        Attendance attendance = new Attendance();
         if (isValidForSave(request)) {
-            Attendance attendance = new Attendance();
             objectParser.copyFieldsIgnoreNulls(attendance, request, true);
             attendance.setEmployee(employeeService.findById(request.getEmployeeId()));
             return attendanceRepository.save(attendance);
-        } else {
-            throw BadRequest.get("AttendanceRequest not available for saving ");
         }
+        return attendance;
     }
 
     @Override
@@ -57,7 +55,6 @@ public class AttendanceServiceImpl implements AttendanceService {
         }
 
     }
-
 
 
     @Override
@@ -99,10 +96,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     @Override
     public AttendanceRequest convertToPayload(Attendance entity) {
-        AttendanceRequest request = new AttendanceRequest();
-        objectParser.copyFieldsIgnoreNulls(request, entity, true);
-        request.setEmployeeId(entity.getEmployee().getId());
-        return request;
+        return AttendanceRequest.getInstance(entity);
     }
 
     @Override

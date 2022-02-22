@@ -27,7 +27,7 @@ public interface BaseEndpoint<T> {
     ResponseEntity<Result> delete(@PathVariable(name = "id") Long id);
 
     @PostMapping("/import")
-    ResponseEntity uploadFile(@RequestParam("file") MultipartFile file);
+    ResponseEntity importFromExcelFile(@RequestParam("file") MultipartFile file);
 
 
     @GetMapping("/export")

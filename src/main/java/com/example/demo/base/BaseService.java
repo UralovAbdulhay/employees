@@ -29,6 +29,7 @@ public interface BaseService<E, R> {
     E update(R request);
 
     default List<E> saveAll(Collection<R> requests) {
+        System.out.println("BaseService  saveAll ");
         return requests.stream().map(this::save).collect(Collectors.toList());
     }
 
@@ -53,8 +54,10 @@ public interface BaseService<E, R> {
     R convertToPayload(E entity);
 
     default List<R> convertToPayload(List<E> entities) {
+        System.out.println("convertToPayload = "+entities);
         return entities
                 .stream()
+//                .filter(Objects::isNull)
                 .map(this::convertToPayload)
                 .collect(Collectors.toList());
     }
@@ -132,68 +135,71 @@ public interface BaseService<E, R> {
 
     default String exportToExcel(List<R> objects) {
 
+        System.out.println("exportToExcel = " + objects);
+        if (!objects.isEmpty()) {
 
-//        if (!objects.isEmpty()) {
+            SpreadsheetInfo.setLicense("FREE-LIMITED-KEY");
 
-        SpreadsheetInfo.setLicense("FREE-LIMITED-KEY");
+            ExcelFile workbook = new ExcelFile();
+            ExcelWorksheet worksheet = workbook.addWorksheet("Export");
 
-        ExcelFile workbook = new ExcelFile();
-        ExcelWorksheet worksheet = workbook.addWorksheet("Export");
+            Object header = objects.get(0);
+            System.out.println(header);
+            Field[] headerFields = header.getClass().getDeclaredFields();
+            int columnSize = headerFields.length;
+            AtomicInteger rowIndex = new AtomicInteger();
 
-        Object header = objects.get(0);
-        System.out.println(header);
-        Field[] headerFields = header.getClass().getDeclaredFields();
-        int columnSize = headerFields.length;
-        AtomicInteger rowIndex = new AtomicInteger();
+            int firstRow = 0, firstCol = 0, lastRow = headerFields.length, lastCol = objects.size();
 
-        int firstRow = 0, firstCol = 0, lastRow = headerFields.length, lastCol = objects.size();
-
-        for (int i = 0; i < columnSize; i++) {
-            headerFields[i].setAccessible(true);
-            worksheet.getCell(rowIndex.get(), i).setValue(headerFields[i].getName());
-            worksheet.getCell(rowIndex.get(), i).getStyle().getFont().setWeight(ExcelFont.BOLD_WEIGHT);
+            for (int i = 0; i < columnSize; i++) {
+                headerFields[i].setAccessible(true);
+                worksheet.getCell(rowIndex.get(), i).setValue(headerFields[i].getName());
+                worksheet.getCell(rowIndex.get(), i).getStyle().getFont().setWeight(ExcelFont.BOLD_WEIGHT);
 //            worksheet.getCell(rowIndex.get(), i).getStyle().getBorders().setBorders(MultipleBorders.all(), SpreadsheetColor.fromName(ColorName.BLACK), LineStyle.THIN);
-        }
-        rowIndex.incrementAndGet();
-        objects.forEach(
-                e -> {
+            }
+            rowIndex.incrementAndGet();
+            objects.forEach(
+                    e -> {
 
-                    Field[] field = e.getClass().getDeclaredFields();
-                    for (int i = 0; i < field.length; i++) {
-                        field[i].setAccessible(true);
-                        try {
-                            worksheet.getCell(rowIndex.get(), i)
-                                    .setValue(field[i].get(e));
+                        Field[] field = e.getClass().getDeclaredFields();
+                        for (int i = 0; i < field.length; i++) {
+                            field[i].setAccessible(true);
+                            try {
+                                worksheet.getCell(rowIndex.get(), i)
+                                        .setValue(field[i].get(e));
 
-                        } catch (IllegalAccessException ex) {
-                            ex.printStackTrace();
+                            } catch (IllegalAccessException ex) {
+                                ex.printStackTrace();
+                            }
                         }
-                    }
 
-                    rowIndex.incrementAndGet();
+                        rowIndex.incrementAndGet();
 
-                });
+                    });
 
-        CellRange cells = worksheet.getUsedCellRange(true);
-        cells.getStyle().getBorders().setBorders(MultipleBorders.all(), SpreadsheetColor.fromName(ColorName.BLACK), LineStyle.THIN);
+            CellRange cells = worksheet.getUsedCellRange(true);
+            cells.getStyle().getBorders().setBorders(MultipleBorders.all(), SpreadsheetColor.fromName(ColorName.BLACK), LineStyle.THIN);
 
 
-        try {
+            try {
 
-            String fileName = String.format("files/export/%s/export-%s.xlsx",
-                    DateTimeFormatter.ofPattern("dd-MM-yyyy").format(LocalDateTime.now()),
-                    DateTimeFormatter.ofPattern("dd-MM-yyyy HH-mm-ss SSS").format(LocalDateTime.now()));
-            new File(fileName).getParentFile().mkdirs();
-            workbook.save(fileName);
+                String fileName = String.format("files/%s/%s/export-%s.xlsx",
+                        BaseURL.EXPORT_FILE_PATH,
+                        DateTimeFormatter.ofPattern("dd-MM-yyyy").format(LocalDateTime.now()),
+                        DateTimeFormatter.ofPattern("dd-MM-yyyy HH-mm-ss SSS").format(LocalDateTime.now()));
+                new File(fileName).getParentFile().mkdirs();
+                workbook.save(fileName);
 
-            return fileName;
+                return fileName;
 
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "";
+            } catch (IOException e) {
+                e.printStackTrace();
+                return "";
+            }
         }
-
+        return "";
     }
+
 
     String exportAll();
 

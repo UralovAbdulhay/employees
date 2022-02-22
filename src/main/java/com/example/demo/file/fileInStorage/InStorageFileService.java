@@ -1,69 +1,90 @@
-//package com.example.demo.file.fileInStorage;
-//
-//
-//import com.example.demo.exceptions.BadRequest;
-//import com.example.demo.exceptions.ResourceNotFound;
-//import com.example.demo.payload.Result;
-//import lombok.RequiredArgsConstructor;
-//import lombok.SneakyThrows;
-//import org.shaded.apache.poi.util.IOUtils;
-//import org.springframework.core.io.ByteArrayResource;
-//import org.springframework.data.domain.Example;
-//import org.springframework.http.HttpHeaders;
-//import org.springframework.http.MediaType;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.stereotype.Service;
-//import org.springframework.transaction.annotation.Propagation;
-//import org.springframework.transaction.annotation.Transactional;
-//import org.springframework.web.multipart.MultipartFile;
-//
-//import java.io.File;
-//import java.io.FileInputStream;
-//import java.io.IOException;
-//import java.util.List;
-//import java.util.Objects;
-//import java.util.UUID;
-//import java.util.stream.Collectors;
-//
-//@Service
-//@RequiredArgsConstructor
-//@Transactional(propagation = Propagation.REQUIRED, rollbackFor = {Exception.class, RuntimeException.class, BadRequest.class})
-//public class InStorageFileService {
-//
-//    private final InStorageFileRepository inStorageFileRepository;
-//
-//
-//    public Result save(MultipartFile multipartFile) {
-//        try {
-//            if (multipartFile.getSize() == 0) {
-//                throw BadRequest.get("MultipartFile ish empty!");
-//            }
-//
-//            InStorageFile inStorageFile =
-//                    new InStorageFile(
-//                    UUID.randomUUID().toString(),
-//                    multipartFile.getOriginalFilename(),
-//                    multipartFile.getContentType(),
-//                    getExtension(Objects.requireNonNull(multipartFile.getOriginalFilename())),
-//                    multipartFile.getSize(),
-//                    multipartFile.getBytes()
-//            );
-//
-//
-//
-//            // save MyFile into base
-//            inStorageFileRepository.save(inStorageFile);
-//            System.out.println("\n save myFile %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n");
-//            System.out.println(inStorageFile);
-//            System.out.println("\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n");
-//
-//            return new Result("File successfully saved!", true, inStorageFile);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            throw BadRequest.get(e.getMessage());
-//        }
-//    }
-//
+package com.example.demo.file.fileInStorage;
+
+
+import com.example.demo.exceptions.BadRequest;
+import com.example.demo.exceptions.ResourceNotFound;
+import com.example.demo.payload.Result;
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.FileUrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
+
+@Service
+@RequiredArgsConstructor
+@Transactional(propagation = Propagation.REQUIRED, rollbackFor = {Exception.class, RuntimeException.class, BadRequest.class})
+public class InStorageFileService {
+
+    private final InStorageFileRepository inStorageFileRepository;
+
+
+    public InStorageFile save(MultipartFile multipartFile, String category) {
+        try {
+            if (multipartFile.getSize() == 0) {
+                throw BadRequest.get("MultipartFile ish empty!");
+            }
+
+            InStorageFile inStorageFile =
+                    new InStorageFile(
+                            UUID.randomUUID().toString(),
+                            multipartFile.getOriginalFilename(),
+                            multipartFile.getContentType(),
+                            getExtension(Objects.requireNonNull(multipartFile.getOriginalFilename())),
+                            multipartFile.getSize(),
+                            multipartFile.getBytes()
+                    );
+
+            String filePath = String.format("files/%s/%s/%s",
+                    category,
+                    DateTimeFormatter.ofPattern("dd-MM-yyyy").format(LocalDateTime.now()),
+                    inStorageFile.getExtension()
+            );
+
+            String fileName = String.format("/%s.%s",
+                    inStorageFile.getHashId(),
+                    inStorageFile.getExtension()
+            );
+
+            File file = new File(filePath, "/" + fileName);
+
+            try {
+                file.getParentFile().mkdirs();
+                // copy bytes into new file or saving into storage
+                Files.copy(multipartFile.getInputStream(), Path.of(file.getPath()));
+                System.out.println(file.getPath());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            inStorageFile.setUploadPath(file.exists() ? filePath : null);
+
+            // save MyFile into base
+            inStorageFileRepository.save(inStorageFile);
+
+            return inStorageFile;
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw BadRequest.get(e.getMessage());
+        }
+    }
+
+
 //    public Result saveAll(List<MultipartFile> multipartFiles) {
 //        try {
 //            if (multipartFiles.stream().anyMatch(e -> e.getSize() == 0)) {
@@ -100,77 +121,65 @@
 //            throw BadRequest.get(e.getMessage());
 //        }
 //    }
-//
-//
-//    public ResponseEntity<ByteArrayResource> downloadFile(String fileId) {
-//        InStorageFile inStorageFile = findByHashId(fileId);
-//        return ResponseEntity.ok()
-//                .contentType(MediaType.parseMediaType(inStorageFile.getContentType()))
-//                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + inStorageFile.getName() + "\"")
-//                .body(new ByteArrayResource(inStorageFile.getData()));
-//    }
-//
-//
-//    public ResponseEntity<ByteArrayResource> previewFile(String fileId) {
-//        InStorageFile inStorageFile = findByHashId(fileId);
-////        System.out.println("previewFile = " + myFile);
-//        return ResponseEntity.ok()
-//                .contentType(MediaType.parseMediaType(inStorageFile.getContentType()))
-//                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + inStorageFile.getName() + "\"")
-//                .body(new ByteArrayResource(inStorageFile.getData()));
-//    }
-//
-//    @SneakyThrows
-//    public ResponseEntity<ByteArrayResource> downloadFileFromServer(String fileId) {
-//        File file = new File(fileId);
-//
-//        return ResponseEntity.ok()
-//                .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
-//                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"")
-//                .body(new ByteArrayResource(IOUtils.toByteArray(new FileInputStream(file))));
-//
-//    }
-//
-//
-//    @SneakyThrows
-//    public ResponseEntity<ByteArrayResource> previewFileFromServer(String fileId) {
-//        File file = new File(fileId);
-//
-//        return ResponseEntity.ok()
-//                .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
-//                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + file.getName() + "\"")
-//                .body(new ByteArrayResource(IOUtils.toByteArray(new FileInputStream(file))));
-//    }
-//
-//
-//    private String getExtension(String fileName) {
-//        return fileName.substring(fileName.lastIndexOf(".") + 1);
-//    }
-//
-//    public InStorageFile findByHashId(String hashId) {
-//        return inStorageFileRepository.findByHashId(hashId).orElseThrow(() -> new ResourceNotFound("MyFile", "hashId", hashId));
-//    }
-//
-//
-//    public List<InStorageFile> findAllByHashId(List<String> hashId) {
-//        return inStorageFileRepository.findByHashIdIn(hashId);
-//    }
-//
-//    public Result delete(String hashId) {
-//        inStorageFileRepository.delete(findByHashId(hashId));
-//        return Result.deleted(!inStorageFileRepository.existsByHashId(hashId));
-//    }
-//
-//    public Result deleteAllByHashId(List<String> hashId) {
-//        inStorageFileRepository.deleteAll(findAllByHashId(hashId));
-//        return Result.deleted(!inStorageFileRepository.existsByHashId(hashId.get(0)));
-//    }
-//
-//    public Result deleteAll(List<InStorageFile> hashId) {
-//        hashId.get(0);
-//        inStorageFileRepository.deleteAll(hashId);
-//        return Result.deleted(!inStorageFileRepository.exists(Example.of(hashId.get(0))));
-//    }
-//
-//
-//}
+
+    @SneakyThrows
+    public ResponseEntity<?> downloadFile(String fileId) {
+        InStorageFile inStorageFile = findByHashId(fileId);
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(inStorageFile.getContentType()))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + inStorageFile.getName() + "\"")
+                .body(
+                        inStorageFile.getUploadPath() != null
+                                ?
+                                new FileUrlResource(String.format("%s/%s.%s", inStorageFile.getUploadPath(), inStorageFile.getHashId(), inStorageFile.getExtension()))
+                                :
+                                new ByteArrayResource(inStorageFile.getData())
+                );
+    }
+
+
+    @SneakyThrows
+    public ResponseEntity<?> previewFile(String fileId) {
+        InStorageFile inStorageFile = findByHashId(fileId);
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(inStorageFile.getContentType()))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + inStorageFile.getName() + "\"")
+                .body(
+                        inStorageFile.getUploadPath() != null
+                                ?
+                                new FileUrlResource(String.format("%s/%s.%s", inStorageFile.getUploadPath(), inStorageFile.getHashId(), inStorageFile.getExtension()))
+                                :
+                                new ByteArrayResource(inStorageFile.getData())
+                );
+    }
+
+
+    private String getExtension(String fileName) {
+        return fileName.substring(fileName.lastIndexOf(".") + 1);
+    }
+
+    public InStorageFile findByHashId(String hashId) {
+        return inStorageFileRepository.findByHashId(hashId).orElseThrow(() -> new ResourceNotFound("MyFile", "hashId", hashId));
+    }
+
+    public List<InStorageFile> findAllByHashId(List<String> hashId) {
+        return inStorageFileRepository.findByHashIdIn(hashId);
+    }
+
+    public Result delete(String hashId) {
+        InStorageFile file = findByHashId(hashId);
+
+        if (file.getUploadPath() != null) {
+            File file1 = new File(getFilePath(file));
+            file1.delete();
+        }
+        inStorageFileRepository.delete(file);
+        return Result.deleted(!inStorageFileRepository.existsByHashId(hashId));
+    }
+
+
+    private String getFilePath(InStorageFile inStorageFile) {
+        return String.format("%s/%s.%s", inStorageFile.getUploadPath(), inStorageFile.getHashId(), inStorageFile.getExtension());
+    }
+
+}

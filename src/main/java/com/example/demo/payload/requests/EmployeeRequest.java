@@ -3,6 +3,7 @@ package com.example.demo.payload.requests;
 import com.example.demo.Validation.validatioinGroup.SaveValidation;
 import com.example.demo.Validation.validatioinGroup.UpdateValidation;
 import com.example.demo.base.BaseRequest;
+import com.example.demo.entity.Employee;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
@@ -12,10 +13,10 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
@@ -31,7 +32,7 @@ public class EmployeeRequest extends BaseRequest {
     String sureName;
 
     @NotNull(groups = SaveValidation.class)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     @PastOrPresent(groups = {SaveValidation.class, UpdateValidation.class})
     LocalDateTime birthDate;
 
@@ -40,4 +41,26 @@ public class EmployeeRequest extends BaseRequest {
     Long positionId;
 
 
+    String imgId;
+
+
+    public static EmployeeRequest getInstance(Employee employee) {
+        String imgId = employee.getImage() != null ? employee.getImage().getHashId() : null;
+
+        EmployeeRequest request = new EmployeeRequest(employee.getName(), employee.getSureName(), employee.getBirthDate(), employee.getPosition().getId(), imgId);
+        request.setId(employee.getId());
+        return request;
+    }
+
+
+    @Override
+    public String toString() {
+        return "EmployeeRequest{" +
+                "name='" + name + '\'' +
+                ", sureName='" + sureName + '\'' +
+                ", birthDate=" + birthDate +
+                ", positionId=" + positionId +
+                ", id=" + id +
+                '}';
+    }
 }
