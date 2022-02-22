@@ -20,8 +20,9 @@ public class PositionController implements PositionEndpoint {
 
     @Override
     public ResponseEntity<Result> save(PositionRequest request) {
-        return mapToResponse(positionService.save(request));
+        return mapToResponse(positionService.convertToPayload(positionService.save(request)));
     }
+
 
     @Override
     public ResponseEntity<Result> update(PositionRequest request) {
