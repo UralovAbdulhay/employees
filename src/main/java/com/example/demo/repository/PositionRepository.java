@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
-@Repository("position")
+
 public interface PositionRepository extends BaseRepository<Position> {
 
 }

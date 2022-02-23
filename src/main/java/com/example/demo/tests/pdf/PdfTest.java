@@ -5,6 +5,7 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPRow;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import org.springframework.core.io.ClassPathResource;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -13,36 +14,49 @@ import java.net.URISyntaxException;
 import java.util.stream.Stream;
 
 public class PdfTest {
-    public static void main(String[] args) throws IOException, DocumentException, URISyntaxException {
+    public static void main(String[] args) throws DocumentException, URISyntaxException, IOException {
 
         Document document = new Document();
 //        Path path = Paths.get(ClassLoader.getSystemResource("files/employee/22-02-2022/jpg/1aa9aa71-86d0-496a-a27c-32d0db5dfa27.jpg").toURI());
         File file = new File("files\\pdf\\test.pdf");
         file.getParentFile().mkdirs();
-        file.createNewFile();
+//        file.createNewFile();
         PdfWriter.getInstance(document, new FileOutputStream(file));
+
 
         document.open();
         Font font = FontFactory.getFont(FontFactory.COURIER, 16, BaseColor.BLACK);
 
 
-        Image img = Image.getInstance(new File("files/employee/jpg/22-02-2022/b360279d-3ea2-45f8-8c1a-c5fec8029374.jpg").toURL());
+        Image img = null;
+
+        try {
+            img = Image.getInstance(new File("files/employee/22-02-2022/jpg/1aa9aa71-86d0-496a-a27c-32d0db5dfa27.jpg").toURL());
+//                img = Image.getInstance(new File("statics/account_img.png").toURL());
+        } catch (BadElementException | IOException e) {
+            try {
+
+                img = Image.getInstance(new ClassPathResource("statics/account_img.png").getFile().toURL());
+//                img = Image.getInstance(new File("statics/account_img.png").toURL());
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            e.printStackTrace();
+        }
+
         img.scaleToFit(160, 240);
 
         Paragraph paragraph = new Paragraph(new Chunk(img, 0, 0, true));
 
-//        paragraph.trimToSize();
-
-
         Paragraph textParagraph = new Paragraph();
 
-        textParagraph.add(new Chunk("Full name: Abdulhay Uralov"));
+        textParagraph.add(new Chunk("Full name: Abdulhay Uralov").setLineHeight(16));
         textParagraph.add(Chunk.NEWLINE);
-        textParagraph.add(new Chunk("Tel: +998 99 007 56 03"));
+        textParagraph.add(new Chunk("Tel: +998 99 007 56 03").setLineHeight(16));
         textParagraph.add(Chunk.NEWLINE);
-        textParagraph.add(new Chunk("Email: AbdulhayUralov@gmail.com"));
+        textParagraph.add(new Chunk("Email: AbdulhayUralov@gmail.com").setLineHeight(16));
         textParagraph.add(Chunk.NEWLINE);
-        textParagraph.add(new Chunk("Birth Date: 23.02.2020"));
+        textParagraph.add(new Chunk("Birth Date: 23.02.2020").setLineHeight(16));
         textParagraph.add(Chunk.NEWLINE);
 
 
@@ -69,7 +83,7 @@ public class PdfTest {
 
         for (int i = 0; i < 50; i++) {
 
-        addRows(attendanceTable);
+            addRows(attendanceTable);
         }
         addCustomRows(attendanceTable);
 
@@ -105,7 +119,14 @@ public class PdfTest {
 
 //        Path path = Paths.get(ClassLoader.getSystemResource("Java_logo.png").toURI());
 //        Image img = Image.getInstance(path.toAbsolutePath().toString());
-        Image img = Image.getInstance(new File("files/employee/22-02-2022/jpg/image_2021-11-27_12-43-13.png").toURL());
+        Image img;
+
+        try {
+            img = Image.getInstance(new File("files/employee/22-02-2022/jpg/image_2021-11-27_12-43-13.png").toURL());
+        } catch (BadElementException e) {
+            img = Image.getInstance(new File("statics/account_img.png").toURL());
+            e.printStackTrace();
+        }
 
         img.getAbsoluteX();
         img.scalePercent(10);

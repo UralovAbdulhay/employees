@@ -31,7 +31,7 @@ public class Employee extends BaseEntity {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     LocalDateTime birthDate;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JsonIgnore
     InStorageFile image;
 

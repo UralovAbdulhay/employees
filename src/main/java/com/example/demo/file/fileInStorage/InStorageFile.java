@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -33,6 +34,7 @@ public class InStorageFile implements Serializable {
     @JsonIgnore
     @Lob
     @Basic(fetch = FetchType.LAZY)
+    @Type(type = "org.hibernate.type.ImageType")
     private byte[] data;
 
     @JsonIgnore

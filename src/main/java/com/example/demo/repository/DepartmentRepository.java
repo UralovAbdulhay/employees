@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 
-@Repository("department")
+
 public interface DepartmentRepository extends BaseRepository<Department> {
 
 }

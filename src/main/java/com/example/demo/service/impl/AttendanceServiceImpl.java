@@ -56,7 +56,6 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     }
 
-
     @Override
     public Attendance findById(@Valid @NotNull @Min(1) Long id) {
         return attendanceRepository.findById(id).orElseThrow(() -> ResourceNotFound.get("Attendance", "id", id));
@@ -104,5 +103,8 @@ public class AttendanceServiceImpl implements AttendanceService {
         return exportToExcel(convertToPayload(attendanceRepository.findAll()));
     }
 
+    public List<Attendance> findAllByEmployeeId(Long employeeId) {
+        return attendanceRepository.findAllByEmployeeId(employeeId);
+    }
 
 }

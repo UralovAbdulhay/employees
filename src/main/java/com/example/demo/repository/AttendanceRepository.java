@@ -7,8 +7,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 
-@Repository("attendance")
+
 public interface AttendanceRepository extends BaseRepository<Attendance> {
 
+
+    List<Attendance> findAllByEmployeeId(Long employee_id);
 }

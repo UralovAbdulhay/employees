@@ -29,7 +29,7 @@ public interface BaseService<E, R> {
     E update(R request);
 
     default List<E> saveAll(Collection<R> requests) {
-        System.out.println("BaseService  saveAll ");
+        System.out.println("BaseService  saveAll " + requests);
         return requests.stream().map(this::save).collect(Collectors.toList());
     }
 

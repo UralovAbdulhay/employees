@@ -1,9 +1,11 @@
 package com.example.demo.file.fileInStorage;
 
 
+import com.example.demo.entity.other.ExportedFile;
 import com.example.demo.exceptions.BadRequest;
 import com.example.demo.exceptions.ResourceNotFound;
 import com.example.demo.payload.Result;
+import com.example.demo.service.impl.ExportedFileService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.core.io.ByteArrayResource;
@@ -32,6 +34,7 @@ import java.util.UUID;
 public class InStorageFileService {
 
     private final InStorageFileRepository inStorageFileRepository;
+    private final ExportedFileService exportedFileService;
 
 
     public InStorageFile save(MultipartFile multipartFile, String category) {
@@ -67,6 +70,11 @@ public class InStorageFileService {
                 file.getParentFile().mkdirs();
                 // copy bytes into new file or saving into storage
                 Files.copy(multipartFile.getInputStream(), Path.of(file.getPath()));
+
+                ExportedFile exportedFile = new ExportedFile();
+                exportedFile.setFilePath(file.getPath());
+                exportedFileService.save(exportedFile);
+
                 System.out.println(file.getPath());
             } catch (IOException e) {
                 e.printStackTrace();

@@ -68,4 +68,11 @@ public class EmployeeController implements EmployeeEndpoint {
         return ResponseEntity.ok(employeeService.uploadImg(id, file));
     }
 
+
+    @PostMapping("/pdf/{id}")
+    public ResponseEntity downloadToPdf(@PathVariable("id") Long id) {
+        return employeeService.exportToPdf(id);
+    }
+
+
 }
