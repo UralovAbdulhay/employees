@@ -122,6 +122,7 @@ public class InStorageFileService {
 //        }
 //    }
 
+
     @SneakyThrows
     public ResponseEntity<?> downloadFile(String fileId) {
         InStorageFile inStorageFile = findByHashId(fileId);
@@ -181,5 +182,21 @@ public class InStorageFileService {
     private String getFilePath(InStorageFile inStorageFile) {
         return String.format("%s/%s.%s", inStorageFile.getUploadPath(), inStorageFile.getHashId(), inStorageFile.getExtension());
     }
+
+    @SneakyThrows
+    public File getFileIO(InStorageFile inStorageFile) {
+
+        File file = new File(getFilePath(inStorageFile));
+        if (!file.exists()) {
+            file.getParentFile().mkdirs();
+            Files.copy(new ByteArrayResource(inStorageFile.getData()).getInputStream(), Path.of(file.getPath()));
+        }
+        return file;
+    }
+
+    public File getFileIO(String hasId) {
+        return getFileIO(findByHashId(hasId));
+    }
+
 
 }
