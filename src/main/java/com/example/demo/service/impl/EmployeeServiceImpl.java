@@ -256,7 +256,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     private static void addTableHeader(PdfPTable table) {
-        Stream.of(" № ", "Attendance date time", "Action type")
+        Stream.of("No", "Attendance date time", "Action type")
                 .forEach(columnTitle -> {
                     PdfPCell header = new PdfPCell();
                     header.setBackgroundColor(BaseColor.LIGHT_GRAY);
