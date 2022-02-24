@@ -21,7 +21,7 @@ public interface BaseURL {
     // paths
     String COMMON_FILE_PATH = "common";
     String EMPLOYEE_FILE_PATH = "employee";
-    String EXPORT_FILE_PATH = "employee";
+    String EXPORT_FILE_PATH = "export";
 
 
 }
