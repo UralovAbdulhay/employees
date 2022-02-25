@@ -25,9 +25,8 @@ public class Attendance extends BaseEntity {
     @Column(nullable = false, name = "event_time")
     LocalDateTime eventTime;
 
-    @JoinColumn(nullable = false)
-    @OneToOne
-    Employee employee;
+
+    Long employeeId;
 
 
 }

@@ -41,7 +41,7 @@ public class PositionServiceImpl implements PositionService {
             position.setDepartment(departmentService.findById(request.getDepartmentId()));
 
             Position saved = positionRepository.save(position);
-            rabbitSender.sendObject(convertToPayload(saved), Urls.TOPIC_EXCHANGE, Urls.POSITION_UPDATE);
+//            rabbitSender.sendObject(convertToPayload(saved), Urls.TOPIC_EXCHANGE, Urls.POSITION_UPDATE);
             return saved;
         }
         return position;
@@ -55,7 +55,7 @@ public class PositionServiceImpl implements PositionService {
             position.setDepartment(departmentService.findById(request.getDepartmentId()));
 
             Position saved = positionRepository.save(position);
-            rabbitSender.sendObject(convertToPayload(saved), Urls.TOPIC_EXCHANGE, Urls.POSITION_UPDATE);
+//            rabbitSender.sendObject(convertToPayload(saved), Urls.TOPIC_EXCHANGE, Urls.POSITION_UPDATE);
             return saved;
         } else {
             throw BadRequest.get("PositionRequest not available for update ");

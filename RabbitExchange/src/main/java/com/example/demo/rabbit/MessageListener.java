@@ -47,7 +47,7 @@ public class MessageListener {
     }
 
 
-    @RabbitListener(queues = DEPARTMENT_SAVE + FROM)
+//    @RabbitListener(queues = DEPARTMENT_SAVE + FROM)
     public void listenerSave(DepartmentRequest request) {
         System.out.println(DEPARTMENT_SAVE + "  listening  = " + request);
 
@@ -59,7 +59,7 @@ public class MessageListener {
     }
 
 
-    @RabbitListener(queues = DEPARTMENT_UPDATE + FROM)
+//    @RabbitListener(queues = DEPARTMENT_UPDATE + FROM)
     public void listenerUpdate(DepartmentRequest request) {
         System.out.println(DEPARTMENT_UPDATE + " = " + request);
 
@@ -68,7 +68,7 @@ public class MessageListener {
     }
 
 
-    @RabbitListener(queues = EMPLOYEE_SAVE + FROM)
+//    @RabbitListener(queues = EMPLOYEE_SAVE + FROM)
     public void listenerSave(EmployeeRequest request) {
         System.out.println(EMPLOYEE_SAVE + " = " + request);
         Employee saved = employeeService.save(request);
@@ -76,7 +76,7 @@ public class MessageListener {
     }
 
 
-    @RabbitListener(queues = EMPLOYEE_UPDATE + FROM)
+//    @RabbitListener(queues = EMPLOYEE_UPDATE + FROM)
     public void listenerUpdate(EmployeeRequest request) {
         System.out.println(EMPLOYEE_UPDATE + " = " + request);
 
@@ -85,7 +85,7 @@ public class MessageListener {
     }
 
 
-    @RabbitListener(queues = POSITION_SAVE + FROM)
+//    @RabbitListener(queues = POSITION_SAVE + FROM)
     public void listenerSave(PositionRequest request) {
         System.out.println(POSITION_SAVE + " = " + request);
 
@@ -94,7 +94,7 @@ public class MessageListener {
     }
 
 
-    @RabbitListener(queues = POSITION_UPDATE + FROM)
+//    @RabbitListener(queues = POSITION_UPDATE + FROM)
     public void listenerUpdate(PositionRequest request) {
         System.out.println(POSITION_UPDATE + " = " + request);
 

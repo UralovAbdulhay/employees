@@ -35,8 +35,9 @@ public class DepartmentServiceImpl implements DepartmentService {
         Department department = new Department();
         if (isValidForSave(request)) {
             objectParser.copyFieldsIgnoreNulls(department, request, true);
+
             Department saved = departmentRepository.save(department);
-            rabbitSender.sendObject(convertToPayload(saved), Urls.TOPIC_EXCHANGE, Urls.DEPARTMENT_SAVE);
+//            rabbitSender.sendObject(convertToPayload(saved), Urls.TOPIC_EXCHANGE, Urls.DEPARTMENT_SAVE);
             return saved;
         }
         return department;
@@ -47,8 +48,9 @@ public class DepartmentServiceImpl implements DepartmentService {
         if (isValidForUpdate(request)) {
             Department department = findById((request.getId()));
             objectParser.copyFieldsIgnoreNulls(department, request, true);
+
             Department saved = departmentRepository.save(department);
-            rabbitSender.sendObject(convertToPayload(saved), Urls.TOPIC_EXCHANGE, Urls.DEPARTMENT_UPDATE);
+//            rabbitSender.sendObject(convertToPayload(saved), Urls.TOPIC_EXCHANGE, Urls.DEPARTMENT_UPDATE);
             return saved;
         } else {
             throw BadRequest.get("DepartmentRequest not available for update ");

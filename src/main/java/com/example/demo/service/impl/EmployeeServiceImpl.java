@@ -72,7 +72,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             employee.setPosition(positionService.findById((request.getPositionId())));
 
             Employee saved = employeeRepository.save(employee);
-            rabbitSender.sendObject(convertToPayload(saved), Urls.TOPIC_EXCHANGE, Urls.EMPLOYEE_SAVE);
+//            rabbitSender.sendObject(convertToPayload(saved), Urls.TOPIC_EXCHANGE, Urls.EMPLOYEE_SAVE);
             return saved;
         }
         return employee;
@@ -86,7 +86,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             employee.setPosition(positionService.findById((request.getPositionId())));
 
             Employee saved = employeeRepository.save(employee);
-            rabbitSender.sendObject(convertToPayload(saved), Urls.TOPIC_EXCHANGE, Urls.EMPLOYEE_UPDATE);
+//            rabbitSender.sendObject(convertToPayload(saved), Urls.TOPIC_EXCHANGE, Urls.EMPLOYEE_UPDATE);
             return saved;
         } else {
             throw BadRequest.get("EmployeeRequest not available for update ");

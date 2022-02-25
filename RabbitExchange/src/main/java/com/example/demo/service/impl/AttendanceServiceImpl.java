@@ -36,7 +36,7 @@ public class AttendanceServiceImpl implements AttendanceService {
         Attendance attendance = new Attendance();
         if (isValidForSave(request)) {
             objectParser.copyFieldsIgnoreNulls(attendance, request, true);
-            attendance.setEmployee(employeeService.findById(request.getEmployeeId()));
+            attendance.setEmployeeId(request.getEmployeeId());
             return attendanceRepository.save(attendance);
         }
         return attendance;
@@ -48,7 +48,7 @@ public class AttendanceServiceImpl implements AttendanceService {
         if (isValidForUpdate(request)) {
             Attendance attendance = findById((request.getId()));
             objectParser.copyFieldsIgnoreNulls(attendance, request, true);
-            attendance.setEmployee(employeeService.findById(request.getEmployeeId()));
+            attendance.setEmployeeId(request.getEmployeeId());
             return attendanceRepository.save(attendance);
         } else {
             throw BadRequest.get("AttendanceRequest not available for update ");
