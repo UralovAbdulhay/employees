@@ -31,5 +31,12 @@ public class DepartmentRequest extends BaseRequest implements Serializable {
         return request;
     }
 
-
+    @Override
+    public String toString() {
+        return "DepartmentRequest{" +
+                "name='" + name + '\'' +
+                ", id=" + id +
+                ", remote_id=" + remote_id +
+                '}';
+    }
 }

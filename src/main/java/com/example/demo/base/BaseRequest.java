@@ -22,13 +22,14 @@ import java.io.Serializable;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class BaseRequest implements Serializable {
 
+    // LOCAL
     @NotNull(groups = UpdateValidation.class, message = "Id null bo'lishi mumkin emas")
     @Min(value = 1, groups = UpdateValidation.class, message = "Id 1 dan kichik bo'lishi mumkin emas")
     @Null(groups = SaveValidation.class)
-    @JsonProperty(value = "remote_id")
+    @JsonProperty("remote_id")
     protected Long id;
 
-    @JsonProperty(value = "id")
+    @JsonProperty("id")
     protected Long remote_id;
 
 }

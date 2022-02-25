@@ -13,11 +13,14 @@ public class Urls {
     public static final String POSITION_SAVE = "position.save";
     public static final String POSITION_UPDATE = "position.update";
 
-    public static final String TOPIC_EXCHANGE = "topic_exchange_remote";
+    public static final String TOPIC_EXCHANGE = "topic_exchange_local";
 
-    public static final String TO = ".remote";
+    public static final String TO = ".local";
 
-    public static final String FROM = ".local";
+    public static final String FROM = ".remote";
+
+
+
 
 
 }

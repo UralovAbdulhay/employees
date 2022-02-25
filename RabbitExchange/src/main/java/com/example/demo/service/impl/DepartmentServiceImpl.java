@@ -4,7 +4,6 @@ import com.example.demo.Validation.ObjectParser;
 import com.example.demo.Validation.validatioinGroup.SaveValidation;
 import com.example.demo.Validation.validatioinGroup.UpdateValidation;
 import com.example.demo.entity.Department;
-
 import com.example.demo.exceptions.BadRequest;
 import com.example.demo.exceptions.ResourceNotFound;
 import com.example.demo.repository.DepartmentRepository;
@@ -17,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.Validator;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +34,12 @@ public class DepartmentServiceImpl implements DepartmentService {
         Department department = new Department();
         if (isValidForSave(request)) {
             objectParser.copyFieldsIgnoreNulls(department, request, true);
+            department.setRemote_id(request.getRemote_id());
             return departmentRepository.save(department);
+        } else {
+            department.setName("Demo null");
+            department.setRemote_id(7L);
+            department.setId(4L);
         }
         return department;
     }
@@ -85,7 +90,9 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public boolean isValidForSave(DepartmentRequest request) {
-        return validator.validate(request, SaveValidation.class).size() == 0;
+        Set size = validator.validate(request, SaveValidation.class);
+        System.out.println("Validation = " + size);
+        return size.isEmpty();
     }
 
     @Override

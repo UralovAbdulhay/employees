@@ -41,14 +41,12 @@ public class EmployeeRequest extends BaseRequest {
     Long positionId;
 
 
-    String imgId;
-
-
     public static EmployeeRequest getInstance(Employee employee) {
 //        String imgId = employee.getImage() != null ? employee.getImage().getHashId() : null;
 //
-//        EmployeeRequest request = new EmployeeRequest(employee.getName(), employee.getSureName(), employee.getBirthDate(), employee.getPosition().getId(), imgId);
-//        request.setId(employee.getId());
+        EmployeeRequest request = new EmployeeRequest(employee.getName(), employee.getSureName(), employee.getBirthDate(), employee.getPosition().getId());
+        request.setId(employee.getId());
+        request.setRemote_id(employee.getRemote_id());
         return null;
     }
 

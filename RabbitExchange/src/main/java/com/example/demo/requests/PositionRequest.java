@@ -30,6 +30,7 @@ public class PositionRequest extends BaseRequest {
     public static PositionRequest getInstance(Position position) {
         PositionRequest request = new PositionRequest(position.getName(), position.getDepartment().getId());
         request.setId(request.getId());
+        request.setRemote_id(request.getRemote_id());
         return request;
     }
 

@@ -25,9 +25,17 @@ public class DepartmentRequest extends BaseRequest {
 
     public static DepartmentRequest getInstance(Department department) {
         DepartmentRequest request = new DepartmentRequest(department.getName());
+        request.setRemote_id(department.getRemote_id());
         request.setId(department.getId());
         return request;
     }
 
-
+    @Override
+    public String toString() {
+        return "DepartmentRequest{" +
+                "name='" + name + '\'' +
+                ", id=" + id +
+                ", remote_id=" + remote_id +
+                '}';
+    }
 }

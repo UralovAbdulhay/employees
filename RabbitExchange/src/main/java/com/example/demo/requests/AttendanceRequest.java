@@ -39,6 +39,8 @@ public class AttendanceRequest extends BaseRequest {
     public static AttendanceRequest getInstance(Attendance attendance) {
         AttendanceRequest request = new AttendanceRequest(attendance.getEmployee().getId(), attendance.getType(), attendance.getEventTime());
         request.setId(attendance.getId());
+        request.setRemote_id(attendance.getRemote_id());
+
         return request;
     }
 

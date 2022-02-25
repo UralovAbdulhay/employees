@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 @Service
 
-public interface BaseService<E, R> {
+public interface BaseService<E extends BaseEntity, R extends BaseRequest> {
 
 
     E save(R request);
@@ -54,7 +54,7 @@ public interface BaseService<E, R> {
     R convertToPayload(E entity);
 
     default List<R> convertToPayload(List<E> entities) {
-        System.out.println("convertToPayload = "+entities);
+        System.out.println("convertToPayload = " + entities);
         return entities
                 .stream()
 //                .filter(Objects::isNull)
@@ -202,5 +202,15 @@ public interface BaseService<E, R> {
 
 
     String exportAll();
+
+    boolean save(E entity);
+
+    default void updateForRabbit(R request) {
+        System.out.println("updateForRabbit = " + request);
+
+        E entity = findById(request.getId());
+        entity.setRemote_id(request.getRemote_id());
+        save(entity);
+    }
 
 }

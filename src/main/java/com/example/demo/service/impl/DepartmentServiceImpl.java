@@ -104,5 +104,8 @@ public class DepartmentServiceImpl implements DepartmentService {
         return exportToExcel(convertToPayload(departmentRepository.findAll()));
     }
 
+    public boolean save(Department entity) {
+        return departmentRepository.save(entity) != null;
+    }
 
 }

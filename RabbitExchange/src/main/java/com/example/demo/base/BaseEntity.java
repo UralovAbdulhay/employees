@@ -21,6 +21,8 @@ public abstract class BaseEntity {
     protected Long id;
 
 
+    protected Long remote_id;
+
     @JsonIgnore
     @CreationTimestamp
     @Column(name = "created_at", updatable = false, nullable = false)

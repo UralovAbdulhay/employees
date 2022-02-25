@@ -11,7 +11,8 @@ import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -26,4 +27,12 @@ public class Department extends BaseEntity {
     @OneToMany(mappedBy = "department", fetch = FetchType.EAGER)
     List<Position> positions;
 
+    @Override
+    public String toString() {
+        return "Department{" +
+                "name='" + name + '\'' +
+                ", id=" + id +
+                ", remote_id=" + remote_id +
+                '}';
+    }
 }

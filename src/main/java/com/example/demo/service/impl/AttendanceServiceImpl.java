@@ -22,6 +22,8 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
+import static com.example.demo.rabbit.Urls.*;
+
 @Service
 @RequiredArgsConstructor
 public class AttendanceServiceImpl implements AttendanceService {
@@ -43,7 +45,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 
 
             Attendance newAttendance = attendanceRepository.save(attendance);
-            rabbitSender.sendObject(convertToPayload(newAttendance), Urls.TOPIC_EXCHANGE, Urls.ATTENDANCE_SAVE);
+            rabbitSender.sendObject(convertToPayload(newAttendance), TOPIC_EXCHANGE, ATTENDANCE_SAVE);
             return newAttendance;
         }
         return attendance;
@@ -58,7 +60,7 @@ public class AttendanceServiceImpl implements AttendanceService {
             attendance.setEmployee(employeeService.findById(request.getEmployeeId()));
 
             Attendance newAttendance = attendanceRepository.save(attendance);
-            rabbitSender.sendObject(convertToPayload(newAttendance), Urls.TOPIC_EXCHANGE, Urls.ATTENDANCE_UPDATE);
+            rabbitSender.sendObject(convertToPayload(newAttendance), TOPIC_EXCHANGE, ATTENDANCE_UPDATE);
             return newAttendance;
         } else {
             throw BadRequest.get("AttendanceRequest not available for update ");
@@ -115,6 +117,10 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     public List<Attendance> findAllByEmployeeId(Long employeeId) {
         return attendanceRepository.findAllByEmployeeId(employeeId);
+    }
+
+    public boolean save(Attendance attendance) {
+        return attendanceRepository.save(attendance) != null;
     }
 
 }

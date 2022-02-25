@@ -7,13 +7,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class RabbitSender<R extends BaseRequest> {
+public class RabbitSender {
 
     private final RabbitTemplate template;
 
 
-    public void sendObject(R obj, String exchange, String routingKey) {
-        System.out.println(String.format("RabbitSender  ----   %s  == %s  ===  %s", obj, exchange, routingKey));
+    public <T extends BaseRequest> void sendObject(T obj, String exchange, String routingKey) {
+        System.out.println(String.format("%s  == %s  ===  %s", obj, exchange, routingKey));
         template.convertAndSend(exchange, routingKey, obj);
     }
 

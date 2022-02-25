@@ -5,6 +5,7 @@ import com.example.demo.Validation.validatioinGroup.SaveValidation;
 import com.example.demo.Validation.validatioinGroup.UpdateValidation;
 import com.example.demo.base.BaseURL;
 import com.example.demo.entity.Attendance;
+import com.example.demo.entity.Department;
 import com.example.demo.entity.Employee;
 import com.example.demo.exceptions.BadRequest;
 import com.example.demo.exceptions.ResourceNotFound;
@@ -273,6 +274,10 @@ public class EmployeeServiceImpl implements EmployeeService {
                     header.setPhrase(new Phrase(columnTitle));
                     table.addCell(header);
                 });
+    }
+
+    public boolean save(Employee entity) {
+        return employeeRepository.save(entity) != null;
     }
 
 }

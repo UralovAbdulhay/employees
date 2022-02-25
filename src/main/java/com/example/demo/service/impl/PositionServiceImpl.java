@@ -112,4 +112,9 @@ public class PositionServiceImpl implements PositionService {
     }
 
 
+    public boolean save(Position entity) {
+        return positionRepository.save(entity) != null;
+    }
+
+
 }
