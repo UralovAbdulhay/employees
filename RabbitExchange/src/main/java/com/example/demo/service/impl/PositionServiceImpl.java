@@ -4,12 +4,11 @@ import com.example.demo.Validation.ObjectParser;
 import com.example.demo.Validation.validatioinGroup.SaveValidation;
 import com.example.demo.Validation.validatioinGroup.UpdateValidation;
 import com.example.demo.entity.Position;
+
 import com.example.demo.exceptions.BadRequest;
 import com.example.demo.exceptions.ResourceNotFound;
-import com.example.demo.payload.requests.PositionRequest;
-import com.example.demo.rabbit.RabbitSender;
-import com.example.demo.rabbit.Urls;
 import com.example.demo.repository.PositionRepository;
+import com.example.demo.requests.PositionRequest;
 import com.example.demo.service.PositionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -30,7 +29,6 @@ public class PositionServiceImpl implements PositionService {
     private final DepartmentServiceImpl departmentService;
     private final ObjectParser objectParser;
     private final Validator validator;
-    private final RabbitSender<PositionRequest> rabbitSender;
 
 
     @Override
@@ -39,10 +37,7 @@ public class PositionServiceImpl implements PositionService {
         if (isValidForSave(request)) {
             objectParser.copyFieldsIgnoreNulls(position, request, true);
             position.setDepartment(departmentService.findById(request.getDepartmentId()));
-
-            Position saved = positionRepository.save(position);
-            rabbitSender.sendObject(convertToPayload(saved), Urls.TOPIC_EXCHANGE, Urls.POSITION_UPDATE);
-            return saved;
+            return positionRepository.save(position);
         }
         return position;
     }
@@ -53,10 +48,7 @@ public class PositionServiceImpl implements PositionService {
             Position position = findById((request.getId()));
             objectParser.copyFieldsIgnoreNulls(position, request, true);
             position.setDepartment(departmentService.findById(request.getDepartmentId()));
-
-            Position saved = positionRepository.save(position);
-            rabbitSender.sendObject(convertToPayload(saved), Urls.TOPIC_EXCHANGE, Urls.POSITION_UPDATE);
-            return saved;
+            return positionRepository.save(position);
         } else {
             throw BadRequest.get("PositionRequest not available for update ");
         }
@@ -108,7 +100,7 @@ public class PositionServiceImpl implements PositionService {
 
     @Override
     public String exportAll() {
-        return exportToExcel(convertToPayload(positionRepository.findAll()));
+        return null;
     }
 
 

@@ -1,6 +1,7 @@
-package com.example.demo;
+package com.example.demo.config;
 
 
+import com.example.demo.Urls;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;

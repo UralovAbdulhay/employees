@@ -13,14 +13,13 @@ import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
-import java.io.Serializable;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @MappedSuperclass
 @JsonIgnoreProperties(ignoreUnknown = true)
-public abstract class BaseRequest implements Serializable {
+public abstract class BaseRequest {
 
     @NotNull(groups = UpdateValidation.class, message = "Id null bo'lishi mumkin emas")
     @Min(value = 1, groups = UpdateValidation.class, message = "Id 1 dan kichik bo'lishi mumkin emas")

@@ -6,10 +6,8 @@ import com.example.demo.Validation.validatioinGroup.UpdateValidation;
 import com.example.demo.entity.Attendance;
 import com.example.demo.exceptions.BadRequest;
 import com.example.demo.exceptions.ResourceNotFound;
-import com.example.demo.payload.requests.AttendanceRequest;
-import com.example.demo.rabbit.RabbitSender;
-import com.example.demo.rabbit.Urls;
 import com.example.demo.repository.AttendanceRepository;
+import com.example.demo.requests.AttendanceRequest;
 import com.example.demo.service.AttendanceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -30,7 +28,6 @@ public class AttendanceServiceImpl implements AttendanceService {
     private final Validator validator;
     private final EmployeeServiceImpl employeeService;
     private final ObjectParser objectParser;
-    private final RabbitSender<AttendanceRequest> rabbitSender;
 
 
     @Override
@@ -40,11 +37,7 @@ public class AttendanceServiceImpl implements AttendanceService {
         if (isValidForSave(request)) {
             objectParser.copyFieldsIgnoreNulls(attendance, request, true);
             attendance.setEmployee(employeeService.findById(request.getEmployeeId()));
-
-
-            Attendance newAttendance = attendanceRepository.save(attendance);
-            rabbitSender.sendObject(convertToPayload(newAttendance), Urls.TOPIC_EXCHANGE, Urls.ATTENDANCE_SAVE);
-            return newAttendance;
+            return attendanceRepository.save(attendance);
         }
         return attendance;
     }
@@ -56,10 +49,7 @@ public class AttendanceServiceImpl implements AttendanceService {
             Attendance attendance = findById((request.getId()));
             objectParser.copyFieldsIgnoreNulls(attendance, request, true);
             attendance.setEmployee(employeeService.findById(request.getEmployeeId()));
-
-            Attendance newAttendance = attendanceRepository.save(attendance);
-            rabbitSender.sendObject(convertToPayload(newAttendance), Urls.TOPIC_EXCHANGE, Urls.ATTENDANCE_UPDATE);
-            return newAttendance;
+            return attendanceRepository.save(attendance);
         } else {
             throw BadRequest.get("AttendanceRequest not available for update ");
         }
@@ -110,8 +100,9 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     @Override
     public String exportAll() {
-        return exportToExcel(convertToPayload(attendanceRepository.findAll()));
+        return null;
     }
+
 
     public List<Attendance> findAllByEmployeeId(Long employeeId) {
         return attendanceRepository.findAllByEmployeeId(employeeId);

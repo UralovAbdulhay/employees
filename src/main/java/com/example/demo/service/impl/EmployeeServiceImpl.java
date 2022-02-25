@@ -10,6 +10,8 @@ import com.example.demo.exceptions.BadRequest;
 import com.example.demo.exceptions.ResourceNotFound;
 import com.example.demo.file.fileInStorage.InStorageFileService;
 import com.example.demo.payload.requests.EmployeeRequest;
+import com.example.demo.rabbit.RabbitSender;
+import com.example.demo.rabbit.Urls;
 import com.example.demo.repository.AttendanceRepository;
 import com.example.demo.repository.EmployeeRepository;
 import com.example.demo.service.EmployeeService;
@@ -56,6 +58,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final Validator validator;
     private final ObjectParser objectParser;
     private final InStorageFileService storageFileService;
+    private final RabbitSender<EmployeeRequest> rabbitSender;
 
 
     @Override
@@ -66,7 +69,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (isValidForSave(request)) {
             objectParser.copyFieldsIgnoreNulls(employee, request, true);
             employee.setPosition(positionService.findById((request.getPositionId())));
-            return employeeRepository.save(employee);
+
+            Employee saved = employeeRepository.save(employee);
+            rabbitSender.sendObject(convertToPayload(saved), Urls.TOPIC_EXCHANGE, Urls.EMPLOYEE_SAVE);
+            return saved;
         }
         return employee;
     }
@@ -77,7 +83,10 @@ public class EmployeeServiceImpl implements EmployeeService {
             Employee employee = findById((request.getId()));
             objectParser.copyFieldsIgnoreNulls(employee, request, true);
             employee.setPosition(positionService.findById((request.getPositionId())));
-            return employeeRepository.save(employee);
+
+            Employee saved = employeeRepository.save(employee);
+            rabbitSender.sendObject(convertToPayload(saved), Urls.TOPIC_EXCHANGE, Urls.EMPLOYEE_UPDATE);
+            return saved;
         } else {
             throw BadRequest.get("EmployeeRequest not available for update ");
         }

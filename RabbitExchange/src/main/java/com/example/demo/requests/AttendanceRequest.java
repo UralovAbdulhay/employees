@@ -1,4 +1,4 @@
-package com.example.demo.payload.requests;
+package com.example.demo.requests;
 
 import com.example.demo.Validation.validatioinGroup.SaveValidation;
 import com.example.demo.Validation.validatioinGroup.UpdateValidation;
@@ -13,7 +13,6 @@ import lombok.experimental.FieldDefaults;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
@@ -22,7 +21,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AttendanceRequest extends BaseRequest implements Serializable {
+public class AttendanceRequest extends BaseRequest {
 
     @NotNull(groups = {UpdateValidation.class, SaveValidation.class}, message = "Id null bo'lishi mumkin emas")
     @Min(value = 1, groups = {UpdateValidation.class, SaveValidation.class}, message = "Id 1 dan kichik bo'lishi mumkin emas")
@@ -40,9 +39,9 @@ public class AttendanceRequest extends BaseRequest implements Serializable {
     public static AttendanceRequest getInstance(Attendance attendance) {
         AttendanceRequest request = new AttendanceRequest(attendance.getEmployee().getId(), attendance.getType(), attendance.getEventTime());
         request.setId(attendance.getId());
-        request.setRemote_id(attendance.getRemote_id());
         return request;
     }
+
 
 
 }

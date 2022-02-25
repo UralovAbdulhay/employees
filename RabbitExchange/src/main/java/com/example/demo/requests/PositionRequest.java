@@ -1,4 +1,4 @@
-package com.example.demo.payload.requests;
+package com.example.demo.requests;
 
 import com.example.demo.Validation.validatioinGroup.SaveValidation;
 import com.example.demo.Validation.validatioinGroup.UpdateValidation;
@@ -30,7 +30,6 @@ public class PositionRequest extends BaseRequest {
     public static PositionRequest getInstance(Position position) {
         PositionRequest request = new PositionRequest(position.getName(), position.getDepartment().getId());
         request.setId(request.getId());
-        request.setRemote_id(request.getRemote_id());
         return request;
     }
 

@@ -20,11 +20,8 @@ public abstract class BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
 
-    protected Long remote_id;
-
 
     @JsonIgnore
-//    @CreatedDate
     @CreationTimestamp
     @Column(name = "created_at", updatable = false, nullable = false)
     protected LocalDateTime createAt;
