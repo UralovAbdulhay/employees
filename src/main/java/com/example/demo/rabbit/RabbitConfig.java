@@ -20,6 +20,33 @@ import static com.example.demo.rabbit.Urls.*;
 @Configuration
 public class RabbitConfig {
 
+    // it will listen and send local exchanges
+
+
+
+
+
+    //*************************************
+    @Bean
+    public DirectExchange errorExchange() {
+        return new DirectExchange("error_exchange_remote");
+    }
+
+
+    @Bean
+    public Queue errorQueue() {
+        return QueueBuilder.durable("error_queue_remote").build();
+    }
+
+
+    @Bean
+    public Binding bindErrorQueue() {
+        return BindingBuilder.bind(errorQueue()).to(errorExchange()).with("remote_xatolar");
+    }
+
+
+    // ***********************************
+
 
     @Bean
     public TopicExchange exchange() {
@@ -27,63 +54,16 @@ public class RabbitConfig {
     }
 
     @Bean
-    public Queue employeeQue_s() {
-        return new Queue(EMPLOYEE_SAVE + TO);
-    }
-
-    @Bean
-    public Queue positionQue_s() {
-        return new Queue(POSITION_SAVE + TO);
-    }
-
-    @Bean
     public Queue attendanceQue_s() {
-        return new Queue(ATTENDANCE_SAVE + TO);
-    }
-
-    @Bean
-    public Queue departmentQue_s() {
-        return new Queue(DEPARTMENT_SAVE + TO);
-    }
-
-
-    @Bean
-    public Queue employeeQue_u() {
-        return new Queue(EMPLOYEE_UPDATE + TO);
-    }
-
-    @Bean
-    public Queue positionQue_u() {
-        return new Queue(POSITION_UPDATE + TO);
-    }
-
-    @Bean
-    public Queue attendanceQue_u() {
-        return new Queue(ATTENDANCE_UPDATE + TO);
-    }
-
-    @Bean
-    public Queue departmentQue_u() {
-        return new Queue(DEPARTMENT_UPDATE + TO);
+        return QueueBuilder.durable(ATTENDANCE_SAVE + TO)
+                .withArgument("x-dead-letter-exchange", "error_exchange_remote")
+                .withArgument("x-dead-letter-routing-key", "remote_xatolar")
+                .build()
+                ;
     }
 
 
-    @Bean
-    public Binding binding_es(@Qualifier("employeeQue_s") Queue queue, TopicExchange topicExchange) {
-        return BindingBuilder
-                .bind(queue)
-                .to(topicExchange)
-                .with(EMPLOYEE_SAVE);
-    }
 
-
-    @Bean
-    public Binding binding_ps(@Qualifier("positionQue_s") Queue queue, TopicExchange topicExchange) {
-        return BindingBuilder
-                .bind(queue)
-                .to(topicExchange)
-                .with(POSITION_SAVE);
-    }
 
 
     @Bean
@@ -95,49 +75,7 @@ public class RabbitConfig {
     }
 
 
-    @Bean
-    public Binding binding_ds(@Qualifier("departmentQue_s") Queue queue, TopicExchange topicExchange) {
-        return BindingBuilder
-                .bind(queue)
-                .to(topicExchange)
-                .with(DEPARTMENT_SAVE);
-    }
 
-
-    @Bean
-    public Binding binding_eu(@Qualifier("employeeQue_u") Queue queue, TopicExchange topicExchange) {
-        return BindingBuilder
-                .bind(queue)
-                .to(topicExchange)
-                .with(EMPLOYEE_UPDATE);
-    }
-
-
-    @Bean
-    public Binding binding_pu(@Qualifier("positionQue_u") Queue queue, TopicExchange topicExchange) {
-        return BindingBuilder
-                .bind(queue)
-                .to(topicExchange)
-                .with(POSITION_UPDATE);
-    }
-
-
-    @Bean
-    public Binding binding_au(@Qualifier("attendanceQue_u") Queue queue, TopicExchange topicExchange) {
-        return BindingBuilder
-                .bind(queue)
-                .to(topicExchange)
-                .with(ATTENDANCE_UPDATE);
-    }
-
-
-    @Bean
-    public Binding binding_du(@Qualifier("departmentQue_u") Queue queue, TopicExchange topicExchange) {
-        return BindingBuilder
-                .bind(queue)
-                .to(topicExchange)
-                .with(DEPARTMENT_UPDATE);
-    }
 
 
     @Bean
