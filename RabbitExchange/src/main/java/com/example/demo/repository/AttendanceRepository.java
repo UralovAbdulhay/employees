@@ -6,7 +6,7 @@ import com.example.demo.entity.Attendance;
 import java.util.List;
 
 
-public interface AttendanceRepository extends BaseRepository<Attendance> {
+public interface AttendanceRepository  {
 
 
     List<Attendance> findAllByEmployeeId(Long employee_id);

@@ -1,31 +1,40 @@
 package com.example.demo.entity;
 
-import com.example.demo.base.BaseEntity;
 import com.example.demo.entity.types.AttendanceType;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Data
-@Entity
+
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Attendance extends BaseEntity {
 
-    @Enumerated(value = EnumType.STRING)
-    @JoinColumn(nullable = false)
+@Document(indexName = "attendance")
+//@Setting(settingPath = "static/")
+public class Attendance {
+
+    @Id
+    @Field(type = FieldType.Keyword)
+    UUID id;
+
+    @Field(type = FieldType.Text)
     AttendanceType type;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm")
-    @Column(nullable = false, name = "event_time")
+    @Field(type = FieldType.Date)
     LocalDateTime eventTime;
 
-
+    @Field(type = FieldType.Long)
     Long employeeId;
 
 
