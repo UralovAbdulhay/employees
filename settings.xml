@@ -1,0 +1,36 @@
+<settings>
+  <proxies> 
+   <proxy>
+
+    <active>true</active>
+   
+    <protocol>http</protocol>
+   
+    <username>resp\a.uralov</username>
+   
+    <password>Qwerty123</password>
+   
+    <host>192.168.152.200</host>
+   
+    <port>8080</port>
+   
+    <nonProxyHosts>192.168.*;10.*;0.*;127.0.*;</nonProxyHosts>
+   
+   </proxy>
+ 
+  </proxies>
+
+ <mirrors>
+        <mirror>
+            <id>maven-default-http-blocker</id>
+            <mirrorOf>external:dont-match-anything-mate:*</mirrorOf>
+            <name>Pseudo repository to mirror external repositories initially using HTTP.</name>
+            <url>http://0.0.0.0/</url>
+            <blocked>false</blocked>
+        </mirror>
+    </mirrors>
+
+
+</settings>
+
+
